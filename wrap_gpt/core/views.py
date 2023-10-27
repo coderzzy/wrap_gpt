@@ -13,10 +13,8 @@ def upload_excel(request):
         fs = FileSystemStorage()
         origin_filename = uploaded_file.name
         filepath = fs.save(os.path.join(EXCEL_ROOT, 'unfinished_'+origin_filename), uploaded_file)
-        thread = threading.Thread(target=excel_process)
+        thread = threading.Thread(target=excel_process, args=(filepath, origin_filename, ))
         thread.start()
-        print('1111')
-
     uploaded_files = os.listdir(os.path.join(EXCEL_ROOT))
     context = {'filepath':filepath, 'uploaded_files': uploaded_files}
     return render(request, 'upload.html', context)
