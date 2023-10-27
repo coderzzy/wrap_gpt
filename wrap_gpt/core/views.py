@@ -2,18 +2,22 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from django.core.files.storage import FileSystemStorage
 import os
-
-EXCEL_ROOT = 'temp_files/excel'
+from wrap_gpt.core.constants import EXCEL_ROOT
+from wrap_gpt.core.gpt.async_excel import process_excel
+import asyncio
 
 def upload_excel(request):
-    filename = ""
+    filepath = ""
     if request.method == 'POST' and request.FILES['file']:
         uploaded_file = request.FILES['file']
         fs = FileSystemStorage()
-        filename = fs.save(EXCEL_ROOT+'/'+uploaded_file.name, uploaded_file)
+        origin_filename = uploaded_file.name
+        filepath = fs.save(os.path.join(EXCEL_ROOT, 'unfinished_'+origin_filename), uploaded_file)
+        asyncio.run(process_excel(origin_filename, filepath))
+        print('1111')
 
     uploaded_files = os.listdir(os.path.join(EXCEL_ROOT))
-    context = {'filename':filename, 'uploaded_files': uploaded_files}
+    context = {'filepath':filepath, 'uploaded_files': uploaded_files}
     return render(request, 'upload.html', context)
 
 def download_excel(request, file_name):
