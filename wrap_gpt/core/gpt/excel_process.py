@@ -39,9 +39,7 @@ def gptForContent(input_text):
 
 def excel_process(file_path, origin_filename):
     # 设置你的OpenAI API密钥
-    api_key = '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'
-    # api_key = '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'
-    openai.api_key = api_key
+    openai.api_key = ''
 
     # 读取Excel文件
     df = pd.read_excel(file_path)
