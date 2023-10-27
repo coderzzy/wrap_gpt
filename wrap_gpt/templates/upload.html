@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Excel Upload and Download</title>
+</head>
+<body>
+    <h1>Excel Upload and Download</h1>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <input type="file" name="file">
+        <input type="submit" value="Upload">
+    </form>
+
+    <ul>
+        {% for file in uploaded_files %}
+            <li>
+                {{ file }}
+                <a href="{% url 'download_excel' file %}">Download</a>
+            </li>
+        {% endfor %}
+    </ul>
+
+    <script>
+        var filename = "{{ filename }}";
+        if (filename != '') {
+            alert("上传成功, " + filename);
+        }
+    </script>
+</body>
+</html>
