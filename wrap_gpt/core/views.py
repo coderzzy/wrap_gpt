@@ -2,9 +2,9 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from django.core.files.storage import FileSystemStorage
 import os
+import threading
 from wrap_gpt.core.constants import EXCEL_ROOT
-from wrap_gpt.core.gpt.async_excel import process_excel
-import asyncio
+from wrap_gpt.core.gpt.excel_process import excel_process
 
 def upload_excel(request):
     filepath = ""
@@ -13,7 +13,8 @@ def upload_excel(request):
         fs = FileSystemStorage()
         origin_filename = uploaded_file.name
         filepath = fs.save(os.path.join(EXCEL_ROOT, 'unfinished_'+origin_filename), uploaded_file)
-        asyncio.run(process_excel(origin_filename, filepath))
+        thread = threading.Thread(target=excel_process)
+        thread.start()
         print('1111')
 
     uploaded_files = os.listdir(os.path.join(EXCEL_ROOT))
