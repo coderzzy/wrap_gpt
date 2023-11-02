@@ -54,6 +54,7 @@ def excel_process(file_path, origin_filename):
     new_excel_filename = f'finished_{origin_filename}'
     new_excel_filepath = os.path.join(EXCEL_ROOT, new_excel_filename)
 
+    print('start')
     for index, row in df.iterrows():
         input_text = row[column_name]  # 从指定列获取文本
         generated_text = gptForContent(input_text)

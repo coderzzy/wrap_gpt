@@ -27,13 +27,13 @@ def upload_excel(request):
             thread.start()
             return JsonResponse(filepath, safe=False)
     # 其他请求，渲染页面
-    uploaded_files = [(file_name.split('_')[1], file_name.split('_')[0]) 
+    uploaded_files = [(file_name, file_name.split('_')[1], file_name.split('_')[0]) 
                       for file_name in os.listdir(os.path.join(EXCEL_ROOT))]
     context = {'uploaded_files': uploaded_files}
     return render(request, 'upload.html', context)
 
 def download_excel(request, file_name):
-    file_path = os.path.join(EXCEL_ROOT, 'finished_'+file_name)
+    file_path = os.path.join(EXCEL_ROOT, file_name)
     if os.path.exists(file_path):
         with open(file_path, 'rb') as excel_file:
             response = HttpResponse(excel_file.read(), content_type='application/ms-excel')
