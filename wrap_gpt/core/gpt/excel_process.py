@@ -62,7 +62,7 @@ def excel_process(file_path, origin_filename):
 
         print(f"Processed {processed_count}, Product name is {input_text} :")
         print(generated_text)
-        time.sleep(20)  # 等待20秒
+        time.sleep(3)  # 等待3秒
     df[output_column_name] = generated_texts  # 将生成的文本添加到新列
     df.to_excel(new_excel_filepath, index=False)
     os.remove(file_path)
