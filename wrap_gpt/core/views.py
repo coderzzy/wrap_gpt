@@ -6,6 +6,12 @@ import threading
 from wrap_gpt.core.constants import EXCEL_ROOT
 from wrap_gpt.core.gpt.excel_process import excel_process
 
+def head(request):
+    return render(request, "head.html")
+
+def index(request):
+    return render(request, "index.html")
+
 def upload_excel(request):
     filepath = ""
     if request.method == 'POST' and request.FILES['file']:

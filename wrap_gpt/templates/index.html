@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>职场小助手</title>
+    <!-- 标题栏icon -->
+    <link rel="icon" href="static/image/nLogo.jpg" type="image/x-icon">
+    <!-- 收藏夹icon -->
+    <link rel="shortcut icon" href="static/image/nLogo.jpg" type="image/x-icon">
+    <!-- layui -->
+    <link href="static/layui/css/layui.css" rel="stylesheet">
+    <script src="static/layui/layui.js"></script>
+    <script src="static/js/jquery.min.js"></script>
+</head>
+<style>
+    #timeNews img:hover{
+        transition: all 1s;
+        transform: scale(1.10);
+    }
+    #areaHot img:hover{
+        transition: all 1s;
+        transform: scale(1.10);
+    }
+</style>
+<body style="background: #F0F0F0;">
+{% include 'head.html' %}
+<!--页面主体-->
+<div class="layui-fluid" style="height: 90vh; overflow-y: scroll;">
+    <div class="layui-row" style="display: flex;justify-content: center; margin-top: 10px;">
+        <div class="layui-col-md9">
+            <div class="layui-panel" style="padding: 40px; line-height: 40px;">
+                <p style="font-size: larger; font-weight: bolder;">这里是广告语</p>
+                <p>这里还是广告语</p>
+            </div>
+        </div>
+    </div>
+    <div class="layui-row" style="display: flex;justify-content: center; margin-top: 10px;">
+        <div class="layui-col-md9">
+            <div class="layui-col-md8" style="padding-right: 10px;">
+                <div class="layui-panel" style="padding: 10px; font-weight: bolder;">
+                    <p>栏目1</p>
+                </div>
+                <div class="layui-panel" style="padding: 10px;">
+                    <div class="layui-panel" style="padding: 10px; display: flex; position: relative;" >
+                        <img src="static/image/news.jpg" style="width: 64px; height: 40px; margin-right: 10px;">
+                        <div style="line-height: 24px; ">
+                            <a href="#" target="_blank" style="font-weight: bolder;overflow: hidden; width: 100%; white-space: nowrap;text-overflow: ellipsis;">内容1</a>
+                            <p style="font-weight: lighter; font-size: smaller; overflow: hidden; width: 100%; white-space: nowrap;text-overflow: ellipsis;">内容2</p>
+                            <p style="font-weight: lighter; font-size: smaller; position: absolute; right: 10px; bottom: 10px;">内容3</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-col-md4">
+                <div class="layui-panel" style="padding: 10px; position: relative; font-weight: bolder;">
+                    <p>栏目2</p>
+                    <a href="#" style="position: absolute; right: 10px; bottom: 10px; font-size: smaller; color: #1e9fff;">所有内容></a>
+                </div>
+                <div class="layui-panel" style="padding: 10px;">
+                    <div class="layui-panel" style="padding: 10px; display: flex; position: relative;  cursor: pointer;">
+                        <img src="static/image/avatar.jpg" class="layui-nav-img" style="width: 50px; height: 50px; margin-right: 20px;">
+                        <div style="line-height: 24px;">
+                            <p style="font-weight: bolder; overflow: hidden; width: 100%; white-space: nowrap;text-overflow: ellipsis;">内容1</p>
+                            <p style="font-weight: lighter; font-size: smaller; overflow: hidden; width: 100%; white-space: nowrap;text-overflow: ellipsis;">内容2</p>
+                            <p style="font-weight: lighter; font-size: smaller; position: absolute; right: 10px; bottom: 10px;">内容3</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="layui-row" style="display: flex;justify-content: center; margin-top: 10px;">
+        <div class="layui-col-md9">
+            <div class="layui-panel" style="padding: 10px; font-weight: bolder;">
+                <p>栏目3</p>
+            </div>
+            <div class="layui-panel layui-row" style="padding: 10px;">
+                <div class="layui-panel layui-col-md3" id="timeNews" style=" padding: 10px;">
+                    <img  src="static/image/news.jpg" style="width: 256px; height: 160px; cursor: pointer;" onclick="seeNews()">
+                    <div style="line-height: 24px;">
+                        <p style="font-weight: bolder; overflow: hidden; width: 100%; white-space: nowrap;text-overflow: ellipsis;"><a href="#" target="_blank">内容1</a></p>
+                        <p style="font-weight: lighter; font-size: smaller;">内容2</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="layui-row" style="display: flex;justify-content: center; margin-top: 10px;">
+        <div class="layui-col-md9">
+            <div class="layui-panel" style="padding: 10px;  position: relative; font-weight: bolder;">
+                <p>栏目4</p>
+                <a href="#" style="position: absolute; right: 10px; bottom: 10px; font-size: smaller; color: #1e9fff;">所有内容 ></a>
+            </div>
+            <div class="layui-panel layui-row">
+                <div class="layui-col-md6" style="padding: 10px;">
+                    <div class="layui-panel" style=" padding: 10px;">
+                        <a href="#" style="color: #1e9fff;">栏目4-1</a>
+                    </div>
+                    <div class="layui-panel layui-row" style="padding: 10px;">
+                        <div class="layui-panel layui-col-md6" id="areaHot" style=" padding: 10px;">
+                            <img src="static/image/news.jpg" style="width: 224px; height: 140px; cursor: pointer;" onclick="seeNews()">
+                            <div style="line-height: 24px;">
+                                <p style="font-weight: bolder;overflow: hidden; width: 100%; white-space: nowrap;text-overflow: ellipsis;"><a href="#" target="_blank">内容1</a></p>
+                                <p style="font-weight: lighter; font-size: smaller; overflow: hidden; width: 100%; white-space: nowrap;text-overflow: ellipsis;">内容2</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-col-md6" style="padding: 10px;">
+                    <div class="layui-panel" style=" padding: 10px;">
+                        <a href="#" style="color: #1e9fff;">栏目4-2</a>
+                    </div>
+                    <div class="layui-panel layui-row" style="padding: 10px;">
+                        <div class="layui-panel layui-col-md6" id="areaHot" style=" padding: 10px;" onclick="seeNews()">
+                            <img src="static/image/news.jpg" style="width: 224px; height: 140px; cursor: pointer;">
+                            <div style="line-height: 24px;">
+                                <p style="font-weight: bolder;overflow: hidden; width: 100%; white-space: nowrap;text-overflow: ellipsis;"><a href="#" target="_blank">内容1</a></p>
+                                <p style="font-weight: lighter; font-size: smaller; overflow: hidden; width: 100%; white-space: nowrap;text-overflow: ellipsis;">内容2</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+<script type="text/javascript">
+    //注意：导航 依赖 element 模块，否则无法进行功能性操作
+    layui.use(['util', 'layer','form','element'], function(){
+        var element = layui.element
+            ,util = layui.util;
+
+        util.event('lay-event',{
+            // 注册和登录
+            login : function (){
+                window.location.href = "#";
+            },
+            register: function (){
+                window.location.href = "#";
+            }
+        })
+    });
+
+    /**
+     * 跳转
+     */
+     function seeNews(newsId){
+        window.location.href = "#";
+    }
+</script>
+</html>

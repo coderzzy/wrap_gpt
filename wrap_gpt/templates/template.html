@@ -16,27 +16,5 @@
 <body style="background: #F0F0F0;">
     {% include 'head.html' %}
     
-    <h1>Excel Upload and Download</h1>
-    <form method="post" enctype="multipart/form-data">
-        {% csrf_token %}
-        <input type="file" name="file">
-        <input type="submit" value="Upload">
-    </form>
-
-    <ul>
-        {% for file in uploaded_files %}
-            <li>
-                {{ file }}
-                <a href="{% url 'download_excel' file %}">Download</a>
-            </li>
-        {% endfor %}
-    </ul>
-
-    <script>
-        var filepath = "{{ filepath }}";
-        if (filepath != '') {
-            alert("上传成功, " + filepath);
-        }
-    </script>
 </body>
 </html>

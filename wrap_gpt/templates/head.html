@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+</head>
+<body>
+
+<!--导航栏-->
+<div class="layui-row layui-panel" style="background-color: rgba(17,17,17,1);">
+    <div class="layui-col-md2" style="margin-top: 5px; padding: 10px; text-align: center;">
+        <a href="{% url 'index' %}" style="color: white; font-weight: bolder; font-size: x-large;">GPT</a>
+    </div>
+    <ul class="layui-nav layui-col-md6" lay-filter="" style="background-color: rgba(17,17,17,0.75);">
+        <li class="layui-nav-item"><a href="{% url 'index' %}">首页</a></li>
+        <li class="layui-nav-item"><a href="{% url 'upload_excel' %}">Excel上传</a></li>
+        <li class="layui-nav-item"><a href="#">小游戏</a></li>
+        <li class="layui-nav-item"><a href="#">未完待续</a></li>
+    </ul>
+    <ul class="layui-nav layui-col-md2" style="background-color: rgba(17,17,17,0.75);">
+        <li class="layui-nav-item" style="background-color: rgba(17,17,17,0.75);">
+            <a><img src="static/image/avatar.jpg" class="layui-nav-img" style="background-color: rgba(17,17,17,0.75);">TEST</a>
+            <dl class="layui-nav-child">
+                <dd style="color: white; text-align: center; background: orange">硬币：0</dd>
+                <dd><a href="#">个人中心</a></dd>
+                <dd><a href="#">未完待续</a></dd>
+                <dd><a href="#">退出登录</a></dd>
+            </dl>
+        </li>
+    </ul>
+    <div class="layui-nav layui-col-md2" 
+    style="background-color: rgba(17,17,17,1); display: flex;align-items: center; margin-top: 5px; padding: 10px;">
+        <button class="layui-btn layui-btn-sm" lay-event="register">注册</button>
+        <button class="layui-btn layui-btn-sm layui-btn-danger" lay-event="login">登录</button>
+    </div>
+</div>
+
+</body>
+</html>
