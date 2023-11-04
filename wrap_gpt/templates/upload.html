@@ -13,45 +13,126 @@
     <script src="static/layui/layui.js"></script>
     <script src="static/js/jquery.min.js"></script>
 </head>
+<style>
+  .layui-tab-title{border-bottom: none;}/* 重置 - 去掉下划线 */
+  .layui-tab-title .layui-this{background: #FFAF09;}/* 增加背景 */
+  .layui-tab-title .layui-this:after{border: none;}/* 重置 -this无边框 */
+  .layui-tab-title li{display: list-item;}/* 重置 -纵向显示 */
+</style>
 <body style="background: #F0F0F0;">
     {% include 'head.html' %}
     <div class="layui-fluid" style="height: 90vh; overflow-y: scroll;">
-        <div class="layui-row" style="display: flex;justify-content: center; margin-top: 10px;">
-            <div class="layui-col-md6">
-                <div class="layui-upload-drag" style="display: block;" id="ID-upload-demo-drag">
-                    <i class="layui-icon layui-icon-upload"></i> 
-                    <div>点击上传，或将文件拖拽到此处</div>
+      <div class="layui-tab">
+        <ul class="layui-tab-title layui-col-md2">
+            <li>单文本</li>
+            <li class="layui-this">批处理</li>
+            <li>微调</li>
+        </ul>
+        <div class="layui-tab-content  layui-col-md10">
+            <div class="layui-tab-item">
+              单文本
+            </div>
+            <div class="layui-tab-item layui-show">
+              <div class="layui-row" style="display: flex;justify-content: center; margin-top: 10px;">
+                <div class="layui-col-md12">
+                  <div class="layui-col-md6 layui-col-md-offset1">
+                    <!-- 基础配置 -->
+                    <div class="layui-col-md12">
+                      <div class="layui-panel" style="padding: 10px; font-weight: bolder;">
+                          <p>基础配置</p>
+                      </div>
+                      <div class="layui-panel layui-row" style="padding: 10px;">
+                          <div class="layui-form-item">
+                            <div class="layui-inline">
+                              <label class="layui-form-label">处理列名</label>
+                              <div class="layui-input-inline" style="width: 100px;">
+                                <input type="text" name="" autocomplete="off" class="layui-input">
+                              </div>
+                            </div>
+                            <div class="layui-inline">
+                              <label class="layui-form-label">输出列名</label>
+                              <div class="layui-input-inline" style="width: 100px;">
+                                <input type="text" name="" autocomplete="off" class="layui-input">
+                              </div>
+                            </div>
+                          </div>
+                      </div>
+                    </div>
+                    <!-- Prompt配置 -->
+                    <div class="layui-col-md12">
+                      <div class="layui-collapse">
+                        <div class="layui-colla-item">
+                          <h2 class="layui-colla-title">Prompt设置</h2>
+                          <div class="layui-colla-content layui-show layui-panel layui-row" style="padding: 10px;">
+                            <div class="layui-form-item">
+                              <div class="layui-inline">
+                                <label class="layui-form-label">系统prompt</label>
+                                <div class="layui-input-inline" style="width: 300px;">
+                                  <input type="text" name="" autocomplete="off" class="layui-input">
+                                </div>
+                              </div>
+                              <div class="layui-inline">
+                                <label class="layui-form-label">用户prompt</label>
+                                <div class="layui-input-inline" style="width: 300px;">
+                                  <input type="text" name="" autocomplete="off" class="layui-input">
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="layui-col-md4 layui-col-md-offset1">
+                    <!-- 文件上传 -->
+                    <div class="layui-col-md12">
+                      <div class="layui-panel" style="padding: 10px; font-weight: bolder;">
+                        <p>文件上传</p>
+                      </div>
+                      <div class="layui-upload-drag" style="display: block;" id="ID-upload-demo-drag">
+                          <i class="layui-icon layui-icon-upload"></i> 
+                          <div>点击上传，或将文件拖拽到此处</div>
+                      </div>
+                    </div>
+                    <!-- 文件列表 -->
+                    <div class="layui-col-md12">
+                      <div class="layui-panel" style="padding: 10px; font-weight: bolder;">
+                        <p>文件列表</p>
+                      </div>
+                      <div class="layui-panel layui-row" style="padding: 10px;">
+                        <table class="layui-table" lay-skin="nob">
+                            <thead>
+                              <tr>
+                                <th>文件</th>
+                                <th>状态</th>
+                                <th>操作</th>
+                              </tr> 
+                            </thead>
+                            {% for file in uploaded_files %}
+                                <tbody>
+                                    <td>{{ file.1 }}</td>
+                                    <td>{{ file.2 }}</td>
+                                    {% if file.2 == 'unfinished' %}
+                                        <td>-</td>
+                                    {% else %}
+                                        <td><a href="{% url 'download_excel' file.0 %}">下载</a></td>
+                                    {% endif %}               
+                                </tbody>
+                            {% endfor %}
+                          </table>
+                        </div>
+                    </div>
+                  </div>
                 </div>
+              </div>
             </div>
+            <div class="layui-tab-item">微调</div>
         </div>
-        <div class="layui-row" style="display: flex;justify-content: center; margin-top: 10px;">
-            <div class="layui-col-md6">
-                <table class="layui-table" lay-skin="nob">
-                    <thead>
-                      <tr>
-                        <th>文件</th>
-                        <th>状态</th>
-                        <th>操作</th>
-                      </tr> 
-                    </thead>
-                    {% for file in uploaded_files %}
-                        <tbody>
-                            <td>{{ file.1 }}</td>
-                            <td>{{ file.2 }}</td>
-                            {% if file.2 == 'unfinished' %}
-                                <td>-</td>
-                            {% else %}
-                                <td><a href="{% url 'download_excel' file.0 %}">下载</a></td>
-                            {% endif %}               
-                        </tbody>
-                    {% endfor %}
-                  </table>
-            </div>
-        </div>
-    </div>
+      </div>
+    </div>  
 
     <script>
-        layui.use(function(){
+        layui.use('element', function(){
         var upload = layui.upload;
         var $ = layui.$;
         var load = null;
