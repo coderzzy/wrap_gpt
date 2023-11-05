@@ -4,7 +4,7 @@ from django.core.files.storage import FileSystemStorage
 import os
 import threading
 from wrap_gpt.core.constants import EXCEL_ROOT
-from wrap_gpt.core.gpt.excel_process import excel_process
+from wrap_gpt.core.gpt.run_gpt import excel_process
 
 def is_ajax(request):
     return request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest'
@@ -22,9 +22,9 @@ def upload_excel(request):
             # parameters
             input_column_name = request.POST.get('input_column_name')
             output_column_name = request.POST.get('output_column_name')
-            timesleep_config = request.POST.get('timesleep_config')
-            maxtokens_config = request.POST.get('maxtokens_config')
-            temperature_config = request.POST.get('temperature_config')
+            timesleep_config = int(request.POST.get('timesleep_config'))
+            maxtokens_config = int(request.POST.get('maxtokens_config'))
+            temperature_config = float(request.POST.get('temperature_config'))
             model_config = request.POST.get('model_config')
             system_prompt = request.POST.get('system_prompt')
             user_prompt = request.POST.get('user_prompt')
@@ -38,7 +38,10 @@ def upload_excel(request):
             # process
             input_path = filepath
             output_path = os.path.join(EXCEL_ROOT, f'finished_{origin_filename}')
-            thread = threading.Thread(target=excel_process, args=(filepath, origin_filename, ))
+            thread = threading.Thread(target=excel_process, 
+                                      args=(input_path, output_path, input_column_name, output_column_name,
+                                            timesleep_config, maxtokens_config, temperature_config, model_config,
+                                            system_prompt, user_prompt, ex_user_prompt, ex_assistant_prompt,))
             thread.start()
             return JsonResponse(filepath, safe=False)
     # 其他请求，渲染页面

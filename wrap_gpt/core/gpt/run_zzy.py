@@ -1,8 +1,8 @@
 import openai
 
-from To_zzy import input_process
-from To_zzy.model_config import modelConfig_content
-from To_zzy.batch_process import batchProcess
+import input_process
+from model_config import modelConfig_content
+from batch_process import batchProcess
 
 
 def run():
@@ -14,7 +14,7 @@ def run():
     output_column_name = 'GPT处理'
 
     # 全局默认配置参数（可传入）：
-    api_key = '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'
+    api_key = ''
     openai.api_key = api_key
     input_path = 'test-GPT1.xlsx'
     output_path = 'outfile.xlsx'
