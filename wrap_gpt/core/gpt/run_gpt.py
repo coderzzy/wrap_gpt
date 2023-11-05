@@ -8,7 +8,6 @@ def content_process(input_path,
                     timesleep_config, maxtokens_config, temperature_config, model_config, 
                     system_prompt):
     print('start')
-    print(system_prompt)
     openai.api_key = ''
     file_type = input_path.split('.')[-1]
     input_text = ''

@@ -266,20 +266,20 @@
         var load = null;
         // 渲染
         // content
-        upload.render({
+        var content_uploader = upload.render({
           elem: '#content-upload-drag',
           accept: 'file',
           url: 'upload_content',
           data: {
             csrfmiddlewaretoken: "{{ csrf_token}}",
-            timesleep_config:$('#content_timesleep_config').val(),
-            maxtokens_config:$('#content_maxtokens_config').val(),
-            temperature_config:$('#content_temperature_config').val(),
-            model_config:$('#content_model_config').val(),
-            prompt:$('#content_system_prompt').val()
+            // 动态获取值
+            timesleep_config:function(){ return $('#content_timesleep_config').val()},
+            maxtokens_config:function(){ return $('#content_maxtokens_config').val()},
+            temperature_config:function(){ return $('#content_temperature_config').val()},
+            model_config:function(){ return $('#content_model_config').val()},
+            system_prompt:function(){ return $('#content_system_prompt').val()}
           },
           before: function(obj){
-            console.log($('#content_system_prompt').val())
             load = layer.load();
           },
           done: function(res){
@@ -290,22 +290,22 @@
         });
 
         // excel 
-        upload.render({
+        var excel_uploader = upload.render({
           elem: '#excel-upload-drag',
           accept: 'file',
           url: 'upload_excel',
           data: {
             csrfmiddlewaretoken: "{{ csrf_token}}",
-            input_column_name: $('#excel_input_column_name').val(),
-            output_column_name:$('#excel_output_column_name').val(),
-            timesleep_config:$('#excel_timesleep_config').val(),
-            maxtokens_config:$('#excel_maxtokens_config').val(),
-            temperature_config:$('#excel_temperature_config').val(),
-            model_config:$('#excel_model_config').val(),
-            system_prompt:$('#excel_system_prompt').val(),
-            user_prompt:$('#excel_user_prompt').val(),
-            ex_user_prompt:$('#excel_ex_user_prompt').val(),
-            ex_assistant_prompt:$('#excel_ex_assistant_prompt').val()
+            input_column_name: function(){ return $('#excel_input_column_name').val()},
+            output_column_name:function(){ return $('#excel_output_column_name').val()},
+            timesleep_config:function(){ return $('#excel_timesleep_config').val()},
+            maxtokens_config:function(){ return $('#excel_maxtokens_config').val()},
+            temperature_config:function(){ return $('#excel_temperature_config').val()},
+            model_config:function(){ return $('#excel_model_config').val()},
+            system_prompt:function(){ return $('#excel_system_prompt').val()},
+            user_prompt:function(){ return $('#excel_user_prompt').val()},
+            ex_user_prompt:function(){ return $('#excel_ex_user_prompt').val()},
+            ex_assistant_prompt:function(){ return $('#excel_ex_assistant_prompt').val()}
           },
           before: function(obj){
             load = layer.load();
