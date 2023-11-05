@@ -3,7 +3,7 @@ from django.http import HttpResponse, JsonResponse
 from django.core.files.storage import FileSystemStorage
 import os
 import threading
-from wrap_gpt.core.constants import EXCEL_ROOT
+from wrap_gpt.core.constants import CONTENT_ROOT, EXCEL_ROOT
 from wrap_gpt.core.gpt.run_gpt import excel_process
 
 def is_ajax(request):
@@ -23,8 +23,28 @@ def console(request):
     return render(request, 'console.html', context)
 
 ### 请求
+def upload_content(request):
+    if is_ajax(request):
+        # 处理 Ajax 请求
+        if request.method == 'POST' and request.FILES['file']:
+            # parameters
+            timesleep_config = int(request.POST.get('timesleep_config'))
+            maxtokens_config = int(request.POST.get('maxtokens_config'))
+            temperature_config = float(request.POST.get('temperature_config'))
+            model_config = request.POST.get('model_config')
+            system_prompt = request.POST.get('system_prompt')
+            # file
+            uploaded_file = request.FILES['file']
+            fs = FileSystemStorage()
+            filepath = fs.save(os.path.join(CONTENT_ROOT, uploaded_file.name), uploaded_file)
+            # process
+            input_path = filepath
+            print(input_path)            
+            return JsonResponse(filepath, safe=False)
+    return JsonResponse('error', safe=False)
+
+
 def upload_excel(request):
-    print(is_ajax(request))
     if is_ajax(request):
         # 处理 Ajax 请求
         if request.method == 'POST' and request.FILES['file']:
@@ -55,6 +75,7 @@ def upload_excel(request):
             return JsonResponse(filepath, safe=False)
     return JsonResponse('error', safe=False)
 
+
 def download_excel(request, file_name):
     file_path = os.path.join(EXCEL_ROOT, file_name)
     if os.path.exists(file_path):
@@ -64,7 +85,8 @@ def download_excel(request, file_name):
             return response
     else:
         return HttpResponse("File not found", status=404)
-    
+
+
 # json 
 def delete_excel(request):
     file_name = request.POST.get('file_name')

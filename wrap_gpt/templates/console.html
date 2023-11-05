@@ -31,8 +31,109 @@
         <div class="layui-tab-content  layui-col-md10">
             <!-- 单文本 -->
             <div class="layui-tab-item">
-              未完待续...
+              <div class="layui-row" style="display: flex;justify-content: center; margin-top: 10px;">
+                <div class="layui-col-md12">
+                  <div class="layui-col-md6 layui-col-md-offset1">
+                    <!-- 基础配置 -->
+                    <div class="layui-col-md12">
+                      <div class="layui-panel" style="padding: 10px; font-weight: bolder;">
+                          <p>基础配置</p>
+                      </div>
+                      <div class="layui-panel layui-row" style="padding: 10px;">
+                          <div class="layui-collapse">
+                            <div class="layui-colla-item">
+                              <h2 class="layui-colla-title">其他设置</h2>
+                              <div class="layui-colla-content layui-form-item">
+                                <div class="layui-inline">
+                                  <label class="layui-form-label">间隔时间</label>
+                                  <div class="layui-input-inline" style="width: 200px;">
+                                    <input id="content_timesleep_config" type="text" name="" autocomplete="off" class="layui-input" value="3">
+                                  </div>
+                                </div>
+                                <div class="layui-inline">
+                                  <label class="layui-form-label">最大字数</label>
+                                  <div class="layui-input-inline" style="width: 200px;">
+                                    <input id="content_maxtokens_config" type="text" name="" autocomplete="off" class="layui-input" value="300">
+                                  </div>
+                                </div>
+                                <div class="layui-inline">
+                                  <label class="layui-form-label">创新性</label>
+                                  <div class="layui-input-inline" style="width: 200px;">
+                                    <input id="content_temperature_config" type="text" name="" autocomplete="off" class="layui-input" value="1">
+                                  </div>
+                                </div>
+                                <div class="layui-inline">
+                                  <label class="layui-form-label">模型版本</label>
+                                  <div class="layui-input-inline" style="width: 200px;">
+                                    <input id="content_model_config" type="text" name="" autocomplete="off" class="layui-input" value="gpt-3.5-turbo">
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                      </div>
+                    </div>
+                    <!-- Prompt配置 -->
+                    <div class="layui-col-md12" style="margin-top: 10px;">
+                      <div class="layui-panel" style="padding: 10px; font-weight: bolder;">
+                        <p>Prompt设置</p>
+                      </div>
+                      <div class="layui-panel layui-row" style="padding: 10px;">
+                        <div class="layui-form-item">
+                          <div class="layui-inline">
+                            <label class="layui-form-label">系统prompt</label>
+                            <div class="layui-input-inline" style="width: 300px;">
+                              <textarea id="content_system_prompt" name="" placeholder="请输入" class="layui-textarea">总结文档,总共输出50字</textarea>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="layui-col-md4" style="margin-left: 10px;">
+                    <!-- 文件上传 -->
+                    <div class="layui-col-md12">
+                      <div class="layui-panel" style="padding: 10px; font-weight: bolder;">
+                        <p>文件上传</p>
+                      </div>
+                      <div class="layui-upload-drag" style="display: block;" id="content-upload-drag">
+                          <i class="layui-icon layui-icon-upload"></i> 
+                          <div>点击上传，或将文件拖拽到此处</div>
+                      </div>
+                    </div>
+                    <!-- 文件列表 -->
+                    <div class="layui-col-md12" style="margin-top: 10px;">
+                      <div class="layui-panel" style="padding: 10px; font-weight: bolder;">
+                        <p>文件列表</p>
+                      </div>
+                      <div class="layui-panel layui-row" style="padding: 10px;">
+                        <table class="layui-table" lay-skin="nob">
+                            <thead>
+                              <tr>
+                                <th>文件</th>
+                                <th>状态</th>
+                                <th>操作</th>
+                              </tr> 
+                            </thead>
+                            {% for file in uploaded_contents %}
+                                <tbody>
+                                    <td>{{ file.1 }}</td>
+                                    <td>{{ file.2 }}</td>
+                                    {% if file.2 == 'unfinished' %}
+                                        <td><a href="#" onclick="delete_content('{{file.0}}')">删除</a></td>
+                                    {% else %}
+                                        <td><a href="{% url 'download_content' file.0 %}">下载</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="#" onclick="delete_content('{{file.0}}')">删除</a></td>
+                                    {% endif %}               
+                                </tbody>
+                            {% endfor %}
+                          </table>
+                        </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
+
             <!-- excel批处理 -->
             <div class="layui-tab-item layui-show">
               <div class="layui-row" style="display: flex;justify-content: center; margin-top: 10px;">
@@ -187,6 +288,30 @@
         var $ = layui.$;
         var load = null;
         // 渲染
+        // content
+        upload.render({
+          elem: '#content-upload-drag',
+          accept: 'file',
+          url: 'upload_content',
+          data: {
+            csrfmiddlewaretoken: "{{ csrf_token}}",
+            timesleep_config:$('#content_timesleep_config').val(),
+            maxtokens_config:$('#content_maxtokens_config').val(),
+            temperature_config:$('#content_temperature_config').val(),
+            model_config:$('#content_model_config').val(),
+            system_prompt:$('#content_system_prompt').val(),
+          },
+          before: function(obj){
+            load = layer.load();
+          },
+          done: function(res){
+            layer.close(load);
+            layer.msg('上传成功');
+            window.location.href = "{% url 'console' %}";
+          }
+        });
+
+        // excel 
         upload.render({
           elem: '#excel-upload-drag',
           accept: 'file',

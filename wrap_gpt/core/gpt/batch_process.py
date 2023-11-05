@@ -1,6 +1,5 @@
 import pandas as pd
 import time
-import os
 from .model_config import modelConfig_batch
 
 # batch process
@@ -21,5 +20,4 @@ def batchProcess(openai, input_path, output_path, column_name, output_column_nam
 
     df[output_column_name] = generated_texts  # 将生成的文本添加到新列
     df.to_excel(output_path, index=False)
-    os.remove(input_path)
     print('end')
