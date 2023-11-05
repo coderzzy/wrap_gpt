@@ -32,7 +32,8 @@ def upload_content(request):
             maxtokens_config = int(request.POST.get('maxtokens_config'))
             temperature_config = float(request.POST.get('temperature_config'))
             model_config = request.POST.get('model_config')
-            system_prompt = request.POST.get('system_prompt')
+            system_prompt = str(request.POST.get('system_prompt'))
+            print(request.POST)
             # file
             uploaded_file = request.FILES['file']
             fs = FileSystemStorage()
@@ -40,9 +41,10 @@ def upload_content(request):
             filepath = fs.save(os.path.join(CONTENT_ROOT, file_name), uploaded_file)
             # process
             input_path = filepath
-            result = content_process(input_path, 
-                    timesleep_config, maxtokens_config, temperature_config, model_config, 
-                    system_prompt)
+            result='111'
+            # result = content_process(input_path, 
+            #         timesleep_config, maxtokens_config, temperature_config, model_config, 
+            #         system_prompt)
             return JsonResponse({'file_name': file_name, 'result': result}, safe=False)
     return JsonResponse('error', safe=False)
 

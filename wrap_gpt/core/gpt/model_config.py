@@ -18,6 +18,7 @@ def modelConfig_batch(openai,
 
 # 单次内容输入
 def modelConfig_content(openai, input_text, temperature_config, model_config, system_prompt):
+    print("system_prompt："+system_prompt)
     response = openai.ChatCompletion.create(
         model=model_config,
         messages=[
@@ -27,7 +28,6 @@ def modelConfig_content(openai, input_text, temperature_config, model_config, sy
         temperature=temperature_config #between 0 and 2， default=1.0 【数值越高，创新+多样性越强，但可能不太保守】
     )
     result = response['choices'][0]['message']['content']
-    print("system_prompt："+system_prompt)
     print("result："+result)
 
     return result
