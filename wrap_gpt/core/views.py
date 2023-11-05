@@ -59,4 +59,13 @@ def download_excel(request, file_name):
             return response
     else:
         return HttpResponse("File not found", status=404)
+    
+# json 
+def delete_file(request):
+    file_name = request.POST.get('file_name')
+    file_path = os.path.join(EXCEL_ROOT, file_name)
+    if os.path.exists(file_path):
+        os.remove(file_path)
+        return JsonResponse('success', safe=False)
+    return JsonResponse('false', safe=False)
 
