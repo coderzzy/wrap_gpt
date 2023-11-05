@@ -51,8 +51,7 @@ def excel_process(file_path, origin_filename):
     # 循环遍历每一行并调用GPT-3.5 API处理
     generated_texts = []
     processed_count = 0
-    new_excel_filename = f'finished_{origin_filename}'
-    new_excel_filepath = os.path.join(EXCEL_ROOT, new_excel_filename)
+    
 
     print('start')
     for index, row in df.iterrows():

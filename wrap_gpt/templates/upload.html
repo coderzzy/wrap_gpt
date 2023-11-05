@@ -29,9 +29,11 @@
             <li>微调</li>
         </ul>
         <div class="layui-tab-content  layui-col-md10">
+            <!-- 单文本 -->
             <div class="layui-tab-item">
-              单文本
+              未完待续...
             </div>
+            <!-- 批处理 -->
             <div class="layui-tab-item layui-show">
               <div class="layui-row" style="display: flex;justify-content: center; margin-top: 10px;">
                 <div class="layui-col-md12">
@@ -45,36 +47,84 @@
                           <div class="layui-form-item">
                             <div class="layui-inline">
                               <label class="layui-form-label">处理列名</label>
-                              <div class="layui-input-inline" style="width: 100px;">
-                                <input type="text" name="" autocomplete="off" class="layui-input">
+                              <div class="layui-input-inline" style="width: 200px;">
+                                <input id="input_column_name" type="text" name="" autocomplete="off" class="layui-input" value="商品销售名称">
                               </div>
                             </div>
                             <div class="layui-inline">
                               <label class="layui-form-label">输出列名</label>
-                              <div class="layui-input-inline" style="width: 100px;">
-                                <input type="text" name="" autocomplete="off" class="layui-input">
+                              <div class="layui-input-inline" style="width: 200px;">
+                                <input id="output_column_name" type="text" name="" autocomplete="off" class="layui-input" value="GPT处理">
+                              </div>
+                            </div>
+                          </div>
+                          <div class="layui-collapse">
+                            <div class="layui-colla-item">
+                              <h2 class="layui-colla-title">其他设置</h2>
+                              <div class="layui-colla-content layui-form-item">
+                                <div class="layui-inline">
+                                  <label class="layui-form-label">间隔时间</label>
+                                  <div class="layui-input-inline" style="width: 200px;">
+                                    <input id="timesleep_config" type="text" name="" autocomplete="off" class="layui-input" value="3">
+                                  </div>
+                                </div>
+                                <div class="layui-inline">
+                                  <label class="layui-form-label">最大字数</label>
+                                  <div class="layui-input-inline" style="width: 200px;">
+                                    <input id="maxtokens_config" type="text" name="" autocomplete="off" class="layui-input" value="300">
+                                  </div>
+                                </div>
+                                <div class="layui-inline">
+                                  <label class="layui-form-label">创新性</label>
+                                  <div class="layui-input-inline" style="width: 200px;">
+                                    <input id="temperature_config" type="text" name="" autocomplete="off" class="layui-input" value="1">
+                                  </div>
+                                </div>
+                                <div class="layui-inline">
+                                  <label class="layui-form-label">模型版本</label>
+                                  <div class="layui-input-inline" style="width: 200px;">
+                                    <input id="model_config" type="text" name="" autocomplete="off" class="layui-input" value="gpt-3.5-turbo">
+                                  </div>
+                                </div>
                               </div>
                             </div>
                           </div>
                       </div>
                     </div>
                     <!-- Prompt配置 -->
-                    <div class="layui-col-md12">
-                      <div class="layui-collapse">
-                        <div class="layui-colla-item">
-                          <h2 class="layui-colla-title">Prompt设置</h2>
-                          <div class="layui-colla-content layui-show layui-panel layui-row" style="padding: 10px;">
-                            <div class="layui-form-item">
+                    <div class="layui-col-md12" style="margin-top: 10px;">
+                      <div class="layui-panel" style="padding: 10px; font-weight: bolder;">
+                        <p>Prompt设置</p>
+                      </div>
+                      <div class="layui-panel layui-row" style="padding: 10px;">
+                        <div class="layui-form-item">
+                          <div class="layui-inline">
+                            <label class="layui-form-label">系统prompt</label>
+                            <div class="layui-input-inline" style="width: 300px;">
+                              <textarea id="system_prompt" name="" placeholder="请输入" class="layui-textarea"></textarea>
+                            </div>
+                          </div>
+                          <div class="layui-inline">
+                            <label class="layui-form-label">用户prompt</label>
+                            <div class="layui-input-inline" style="width: 300px;">
+                              <textarea id="user_prompt" name="" placeholder="请输入" class="layui-textarea"></textarea>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="layui-collapse">
+                          <div class="layui-colla-item">
+                            <h2 class="layui-colla-title">高级设置</h2>
+                            <div class="layui-colla-content layui-form-item">
                               <div class="layui-inline">
-                                <label class="layui-form-label">系统prompt</label>
+                                <label class="layui-form-label">样例-用户</label>
                                 <div class="layui-input-inline" style="width: 300px;">
-                                  <input type="text" name="" autocomplete="off" class="layui-input">
+                                  <textarea id="ex_user_prompt" name="" placeholder="请输入" class="layui-textarea"></textarea>
                                 </div>
                               </div>
                               <div class="layui-inline">
-                                <label class="layui-form-label">用户prompt</label>
+                                <label class="layui-form-label">样例-助手</label>
                                 <div class="layui-input-inline" style="width: 300px;">
-                                  <input type="text" name="" autocomplete="off" class="layui-input">
+                                  <textarea id="ex_assistant_prompt" name="" placeholder="请输入" class="layui-textarea"></textarea>
                                 </div>
                               </div>
                             </div>
@@ -83,7 +133,7 @@
                       </div>
                     </div>
                   </div>
-                  <div class="layui-col-md4 layui-col-md-offset1">
+                  <div class="layui-col-md4" style="margin-left: 10px;">
                     <!-- 文件上传 -->
                     <div class="layui-col-md12">
                       <div class="layui-panel" style="padding: 10px; font-weight: bolder;">
@@ -95,7 +145,7 @@
                       </div>
                     </div>
                     <!-- 文件列表 -->
-                    <div class="layui-col-md12">
+                    <div class="layui-col-md12" style="margin-top: 10px;">
                       <div class="layui-panel" style="padding: 10px; font-weight: bolder;">
                         <p>文件列表</p>
                       </div>
@@ -126,7 +176,7 @@
                 </div>
               </div>
             </div>
-            <div class="layui-tab-item">微调</div>
+            <div class="layui-tab-item">未完待续...</div>
         </div>
       </div>
     </div>  
@@ -142,7 +192,17 @@
           accept: 'file',
           url: 'upload_excel',
           data: {
-            csrfmiddlewaretoken: "{{ csrf_token}}"
+            csrfmiddlewaretoken: "{{ csrf_token}}",
+            input_column_name: $('#input_column_name').val(),
+            output_column_name:$('#output_column_name').val(),
+            timesleep_config:$('#timesleep_config').val(),
+            maxtokens_config:$('#maxtokens_config').val(),
+            temperature_config:$('#temperature_config').val(),
+            model_config:$('#model_config').val(),
+            system_prompt:$('#system_prompt').val(),
+            user_prompt:$('#user_prompt').val(),
+            ex_user_prompt:$('#ex_user_prompt').val(),
+            ex_assistant_prompt:$('#ex_assistant_prompt').val()
           },
           before: function(obj){
             load = layer.load();

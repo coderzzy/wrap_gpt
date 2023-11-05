@@ -19,10 +19,25 @@ def upload_excel(request):
     if is_ajax(request):
         # 处理 Ajax 请求
         if request.method == 'POST' and request.FILES['file']:
+            # parameters
+            input_column_name = request.POST.get('input_column_name')
+            output_column_name = request.POST.get('output_column_name')
+            timesleep_config = request.POST.get('timesleep_config')
+            maxtokens_config = request.POST.get('maxtokens_config')
+            temperature_config = request.POST.get('temperature_config')
+            model_config = request.POST.get('model_config')
+            system_prompt = request.POST.get('system_prompt')
+            user_prompt = request.POST.get('user_prompt')
+            ex_user_prompt = request.POST.get('ex_user_prompt')
+            ex_assistant_prompt = request.POST.get('ex_assistant_prompt')
+            # file
             uploaded_file = request.FILES['file']
             fs = FileSystemStorage()
             origin_filename = uploaded_file.name
             filepath = fs.save(os.path.join(EXCEL_ROOT, 'unfinished_'+origin_filename), uploaded_file)
+            # process
+            input_path = filepath
+            output_path = os.path.join(EXCEL_ROOT, f'finished_{origin_filename}')
             thread = threading.Thread(target=excel_process, args=(filepath, origin_filename, ))
             thread.start()
             return JsonResponse(filepath, safe=False)
