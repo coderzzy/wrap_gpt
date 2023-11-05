@@ -101,33 +101,14 @@
                           <div>点击上传，或将文件拖拽到此处</div>
                       </div>
                     </div>
-                    <!-- 文件列表 -->
+                    <!-- 分析结果 -->
                     <div class="layui-col-md12" style="margin-top: 10px;">
                       <div class="layui-panel" style="padding: 10px; font-weight: bolder;">
-                        <p>文件列表</p>
+                        <p>分析结果</p>
                       </div>
                       <div class="layui-panel layui-row" style="padding: 10px;">
-                        <table class="layui-table" lay-skin="nob">
-                            <thead>
-                              <tr>
-                                <th>文件</th>
-                                <th>状态</th>
-                                <th>操作</th>
-                              </tr> 
-                            </thead>
-                            {% for file in uploaded_contents %}
-                                <tbody>
-                                    <td>{{ file.1 }}</td>
-                                    <td>{{ file.2 }}</td>
-                                    {% if file.2 == 'unfinished' %}
-                                        <td><a href="#" onclick="delete_content('{{file.0}}')">删除</a></td>
-                                    {% else %}
-                                        <td><a href="{% url 'download_content' file.0 %}">下载</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="#" onclick="delete_content('{{file.0}}')">删除</a></td>
-                                    {% endif %}               
-                                </tbody>
-                            {% endfor %}
-                          </table>
-                        </div>
+                        <textarea id="content-result" name="" placeholder="waiting..." class="layui-textarea"></textarea>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -306,8 +287,8 @@
           },
           done: function(res){
             layer.close(load);
-            layer.msg('上传成功');
-            window.location.href = "{% url 'console' %}";
+            layer.msg('上传并分析成功');
+            $('#content-result').val('文件名: '+res.file_name + '\r\n分析: '+res.result)
           }
         });
 

@@ -9,7 +9,6 @@ def batchProcess(openai, input_path, output_path, column_name, output_column_nam
     df = pd.read_excel(input_path)
     # 循环遍历每一行并调用GPT-3.5 API处理
     generated_texts = []
-    print('start')
     for index, row in df.iterrows():
         input_text = row[column_name]  # 从指定列获取文本
         generated_text = modelConfig_batch(openai, input_text, maxtokens_config, temperature_config, model_config,
@@ -20,4 +19,3 @@ def batchProcess(openai, input_path, output_path, column_name, output_column_nam
 
     df[output_column_name] = generated_texts  # 将生成的文本添加到新列
     df.to_excel(output_path, index=False)
-    print('end')

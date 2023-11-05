@@ -27,7 +27,6 @@ def modelConfig_content(openai, input_text, temperature_config, model_config, sy
         temperature=temperature_config #between 0 and 2， default=1.0 【数值越高，创新+多样性越强，但可能不太保守】
     )
     result = response['choices'][0]['message']['content']
-    print("input_text："+input_text)
     print("system_prompt："+system_prompt)
     print("result："+result)
 

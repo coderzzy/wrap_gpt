@@ -4,7 +4,7 @@ from django.core.files.storage import FileSystemStorage
 import os
 import threading
 from wrap_gpt.core.constants import CONTENT_ROOT, EXCEL_ROOT
-from wrap_gpt.core.gpt.run_gpt import excel_process
+from wrap_gpt.core.gpt.run_gpt import content_process, excel_process
 
 def is_ajax(request):
     return request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest'
@@ -36,11 +36,14 @@ def upload_content(request):
             # file
             uploaded_file = request.FILES['file']
             fs = FileSystemStorage()
-            filepath = fs.save(os.path.join(CONTENT_ROOT, uploaded_file.name), uploaded_file)
+            file_name = uploaded_file.name
+            filepath = fs.save(os.path.join(CONTENT_ROOT, file_name), uploaded_file)
             # process
             input_path = filepath
-            print(input_path)            
-            return JsonResponse(filepath, safe=False)
+            result = content_process(input_path, 
+                    timesleep_config, maxtokens_config, temperature_config, model_config, 
+                    system_prompt)
+            return JsonResponse({'file_name': file_name, 'result': result}, safe=False)
     return JsonResponse('error', safe=False)
 
 
