@@ -9,13 +9,22 @@ from wrap_gpt.core.gpt.run_gpt import excel_process
 def is_ajax(request):
     return request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest'
 
+### 页面渲染
 def head(request):
     return render(request, "head.html")
 
 def index(request):
     return render(request, "index.html")
 
+def console(request):
+    uploaded_excels = [(file_name, file_name.split('_')[1], file_name.split('_')[0]) 
+                      for file_name in os.listdir(os.path.join(EXCEL_ROOT))]
+    context = {'uploaded_excels': uploaded_excels}
+    return render(request, 'console.html', context)
+
+### 请求
 def upload_excel(request):
+    print(is_ajax(request))
     if is_ajax(request):
         # 处理 Ajax 请求
         if request.method == 'POST' and request.FILES['file']:
@@ -44,11 +53,7 @@ def upload_excel(request):
                                             system_prompt, user_prompt, ex_user_prompt, ex_assistant_prompt,))
             thread.start()
             return JsonResponse(filepath, safe=False)
-    # 其他请求，渲染页面
-    uploaded_files = [(file_name, file_name.split('_')[1], file_name.split('_')[0]) 
-                      for file_name in os.listdir(os.path.join(EXCEL_ROOT))]
-    context = {'uploaded_files': uploaded_files}
-    return render(request, 'upload.html', context)
+    return JsonResponse('error', safe=False)
 
 def download_excel(request, file_name):
     file_path = os.path.join(EXCEL_ROOT, file_name)
@@ -61,7 +66,7 @@ def download_excel(request, file_name):
         return HttpResponse("File not found", status=404)
     
 # json 
-def delete_file(request):
+def delete_excel(request):
     file_name = request.POST.get('file_name')
     file_path = os.path.join(EXCEL_ROOT, file_name)
     if os.path.exists(file_path):

@@ -33,7 +33,7 @@
             <div class="layui-tab-item">
               未完待续...
             </div>
-            <!-- 批处理 -->
+            <!-- excel批处理 -->
             <div class="layui-tab-item layui-show">
               <div class="layui-row" style="display: flex;justify-content: center; margin-top: 10px;">
                 <div class="layui-col-md12">
@@ -48,13 +48,13 @@
                             <div class="layui-inline">
                               <label class="layui-form-label">处理列名</label>
                               <div class="layui-input-inline" style="width: 200px;">
-                                <input id="input_column_name" type="text" name="" autocomplete="off" class="layui-input" value="商品销售名称">
+                                <input id="excel_input_column_name" type="text" name="" autocomplete="off" class="layui-input" value="商品销售名称">
                               </div>
                             </div>
                             <div class="layui-inline">
                               <label class="layui-form-label">输出列名</label>
                               <div class="layui-input-inline" style="width: 200px;">
-                                <input id="output_column_name" type="text" name="" autocomplete="off" class="layui-input" value="GPT处理">
+                                <input id="excel_output_column_name" type="text" name="" autocomplete="off" class="layui-input" value="GPT处理">
                               </div>
                             </div>
                           </div>
@@ -65,25 +65,25 @@
                                 <div class="layui-inline">
                                   <label class="layui-form-label">间隔时间</label>
                                   <div class="layui-input-inline" style="width: 200px;">
-                                    <input id="timesleep_config" type="text" name="" autocomplete="off" class="layui-input" value="3">
+                                    <input id="excel_timesleep_config" type="text" name="" autocomplete="off" class="layui-input" value="3">
                                   </div>
                                 </div>
                                 <div class="layui-inline">
                                   <label class="layui-form-label">最大字数</label>
                                   <div class="layui-input-inline" style="width: 200px;">
-                                    <input id="maxtokens_config" type="text" name="" autocomplete="off" class="layui-input" value="300">
+                                    <input id="excel_maxtokens_config" type="text" name="" autocomplete="off" class="layui-input" value="300">
                                   </div>
                                 </div>
                                 <div class="layui-inline">
                                   <label class="layui-form-label">创新性</label>
                                   <div class="layui-input-inline" style="width: 200px;">
-                                    <input id="temperature_config" type="text" name="" autocomplete="off" class="layui-input" value="1">
+                                    <input id="excel_temperature_config" type="text" name="" autocomplete="off" class="layui-input" value="1">
                                   </div>
                                 </div>
                                 <div class="layui-inline">
                                   <label class="layui-form-label">模型版本</label>
                                   <div class="layui-input-inline" style="width: 200px;">
-                                    <input id="model_config" type="text" name="" autocomplete="off" class="layui-input" value="gpt-3.5-turbo">
+                                    <input id="excel_model_config" type="text" name="" autocomplete="off" class="layui-input" value="gpt-3.5-turbo">
                                   </div>
                                 </div>
                               </div>
@@ -101,13 +101,13 @@
                           <div class="layui-inline">
                             <label class="layui-form-label">系统prompt</label>
                             <div class="layui-input-inline" style="width: 300px;">
-                              <textarea id="system_prompt" name="" placeholder="请输入" class="layui-textarea">结果输出不超过10个词，且不出现'搜索词'和'关键词'字样，并将所有词都用；连接成一行</textarea>
+                              <textarea id="excel_system_prompt" name="" placeholder="请输入" class="layui-textarea">结果输出不超过10个词，且不出现'搜索词'和'关键词'字样，并将所有词都用；连接成一行</textarea>
                             </div>
                           </div>
                           <div class="layui-inline">
                             <label class="layui-form-label">用户prompt</label>
                             <div class="layui-input-inline" style="width: 300px;">
-                              <textarea id="user_prompt" name="" placeholder="请输入" class="layui-textarea">请帮我提取商品中4个关键词，并扩展5个极有可能能够搜索到该商品的搜索词</textarea>
+                              <textarea id="excel_user_prompt" name="" placeholder="请输入" class="layui-textarea">请帮我提取商品中4个关键词，并扩展5个极有可能能够搜索到该商品的搜索词</textarea>
                             </div>
                           </div>
                         </div>
@@ -118,13 +118,13 @@
                               <div class="layui-inline">
                                 <label class="layui-form-label">样例-用户</label>
                                 <div class="layui-input-inline" style="width: 300px;">
-                                  <textarea id="ex_user_prompt" name="" placeholder="请输入" class="layui-textarea"></textarea>
+                                  <textarea id="excel_ex_user_prompt" name="" placeholder="请输入" class="layui-textarea"></textarea>
                                 </div>
                               </div>
                               <div class="layui-inline">
                                 <label class="layui-form-label">样例-助手</label>
                                 <div class="layui-input-inline" style="width: 300px;">
-                                  <textarea id="ex_assistant_prompt" name="" placeholder="请输入" class="layui-textarea"></textarea>
+                                  <textarea id="excel_ex_assistant_prompt" name="" placeholder="请输入" class="layui-textarea"></textarea>
                                 </div>
                               </div>
                             </div>
@@ -139,7 +139,7 @@
                       <div class="layui-panel" style="padding: 10px; font-weight: bolder;">
                         <p>文件上传</p>
                       </div>
-                      <div class="layui-upload-drag" style="display: block;" id="ID-upload-demo-drag">
+                      <div class="layui-upload-drag" style="display: block;" id="excel-upload-drag">
                           <i class="layui-icon layui-icon-upload"></i> 
                           <div>点击上传，或将文件拖拽到此处</div>
                       </div>
@@ -158,14 +158,14 @@
                                 <th>操作</th>
                               </tr> 
                             </thead>
-                            {% for file in uploaded_files %}
+                            {% for file in uploaded_excels %}
                                 <tbody>
                                     <td>{{ file.1 }}</td>
                                     <td>{{ file.2 }}</td>
                                     {% if file.2 == 'unfinished' %}
-                                        <td><a href="#" onclick="delete_file('{{file.0}}')">删除</a></td>
+                                        <td><a href="#" onclick="delete_excel('{{file.0}}')">删除</a></td>
                                     {% else %}
-                                        <td><a href="{% url 'download_excel' file.0 %}">下载</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="#" onclick="delete_file('{{file.0}}')">删除</a></td>
+                                        <td><a href="{% url 'download_excel' file.0 %}">下载</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="#" onclick="delete_excel('{{file.0}}')">删除</a></td>
                                     {% endif %}               
                                 </tbody>
                             {% endfor %}
@@ -188,21 +188,21 @@
         var load = null;
         // 渲染
         upload.render({
-          elem: '#ID-upload-demo-drag',
+          elem: '#excel-upload-drag',
           accept: 'file',
           url: 'upload_excel',
           data: {
             csrfmiddlewaretoken: "{{ csrf_token}}",
-            input_column_name: $('#input_column_name').val(),
-            output_column_name:$('#output_column_name').val(),
-            timesleep_config:$('#timesleep_config').val(),
-            maxtokens_config:$('#maxtokens_config').val(),
-            temperature_config:$('#temperature_config').val(),
-            model_config:$('#model_config').val(),
-            system_prompt:$('#system_prompt').val(),
-            user_prompt:$('#user_prompt').val(),
-            ex_user_prompt:$('#ex_user_prompt').val(),
-            ex_assistant_prompt:$('#ex_assistant_prompt').val()
+            input_column_name: $('#excel_input_column_name').val(),
+            output_column_name:$('#excel_output_column_name').val(),
+            timesleep_config:$('#excel_timesleep_config').val(),
+            maxtokens_config:$('#excel_maxtokens_config').val(),
+            temperature_config:$('#excel_temperature_config').val(),
+            model_config:$('#excel_model_config').val(),
+            system_prompt:$('#excel_system_prompt').val(),
+            user_prompt:$('#excel_user_prompt').val(),
+            ex_user_prompt:$('#excel_ex_user_prompt').val(),
+            ex_assistant_prompt:$('#excel_ex_assistant_prompt').val()
           },
           before: function(obj){
             load = layer.load();
@@ -210,22 +210,22 @@
           done: function(res){
             layer.close(load);
             layer.msg('上传成功');
-            window.location.href = "{% url 'upload_excel' %}";
+            window.location.href = "{% url 'console' %}";
           }
         });
       });
 
-      function delete_file(file_name){
+      function delete_excel(file_name){
         $.ajax({
           type: 'POST',
-          url: 'delete_file',
+          url: 'delete_excel',
           data: {
             csrfmiddlewaretoken: "{{ csrf_token}}",
             file_name: file_name
           },
           success: function(res){
             layer.msg('删除成功');
-            window.location.href = "{% url 'upload_excel' %}";
+            window.location.href = "{% url 'console' %}";
           }
         })
 
