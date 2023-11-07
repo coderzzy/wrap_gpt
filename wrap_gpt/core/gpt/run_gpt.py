@@ -8,7 +8,7 @@ def content_process(input_path,
                     timesleep_config, maxtokens_config, temperature_config, model_config, 
                     system_prompt):
     print('start')
-    openai.api_key = ''
+    openai.api_key = os.environ.get('OPENAI_KEY')
     file_type = input_path.split('.')[-1]
     input_text = ''
     if file_type == "txt":
@@ -25,7 +25,7 @@ def excel_process(input_path, output_path, column_name, output_column_name,
                      timesleep_config, maxtokens_config, temperature_config, model_config,
                      system_prompt, user_prompt, ex_user_prompt, ex_assistant_prompt):
     print('start')
-    openai.api_key = ''
+    openai.api_key = os.environ.get('OPENAI_KEY')
     batchProcess(openai, input_path, output_path, column_name, output_column_name,
                      timesleep_config, maxtokens_config, temperature_config, model_config,
                      system_prompt, user_prompt, ex_user_prompt, ex_assistant_prompt)

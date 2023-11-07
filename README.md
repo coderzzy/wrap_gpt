@@ -8,5 +8,5 @@ django-admin --version
 
 ## 程序启动
 ```python
-python manage.py runserver
+python manage.py OPENAI_KEY:xxxx[,...] runserver 0.0.0.0:8000
 ```

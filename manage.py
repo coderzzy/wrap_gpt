@@ -16,7 +16,10 @@ except ImportError as exc:
 def main():
     """Run administrative tasks."""
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "wrap_gpt.settings")
-    execute_from_command_line(sys.argv)
+    my_settings = sys.argv[1].split(',')
+    for my_setting in my_settings:
+        os.environ[my_setting.split(':')[0]] = my_setting.split(':')[1]
+    execute_from_command_line(sys.argv[1:])
 
 
 if __name__ == "__main__":
