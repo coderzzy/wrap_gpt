@@ -284,8 +284,16 @@
           },
           done: function(res){
             layer.close(load);
-            layer.msg('上传并分析成功');
-            $('#content-result').val('文件名: '+res.file_name + '\r\n分析: '+res.result)
+            if (res=='error') {
+              layer.msg('内部异常');
+            } else {
+              layer.msg('上传并分析成功');
+              $('#content-result').val('文件名: '+res.file_name + '\r\n分析: '+res.result)
+            }
+          },
+          error: function(res){
+            layer.close(load);
+            layer.msg('内部异常');
           }
         });
 
@@ -312,8 +320,16 @@
           },
           done: function(res){
             layer.close(load);
-            layer.msg('上传成功');
-            window.location.href = "{% url 'console' %}";
+            if (res=='error') {
+              layer.msg('内部异常');
+            } else {
+              layer.msg('上传成功');
+              window.location.href = "{% url 'console' %}";
+            }
+          },
+          error: function(res){
+            layer.close(load);
+            layer.msg('内部异常');
           }
         });
       });
@@ -327,8 +343,12 @@
             file_name: file_name
           },
           success: function(res){
-            layer.msg('删除成功');
-            window.location.href = "{% url 'console' %}";
+            if (res=='error') {
+              layer.msg('内部异常');
+            } else {
+              layer.msg('删除成功');
+              window.location.href = "{% url 'console' %}";
+            }
           }
         })
 

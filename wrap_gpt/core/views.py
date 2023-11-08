@@ -97,5 +97,5 @@ def delete_excel(request):
     if os.path.exists(file_path):
         os.remove(file_path)
         return JsonResponse('success', safe=False)
-    return JsonResponse('false', safe=False)
+    return JsonResponse('error', safe=False)
 
