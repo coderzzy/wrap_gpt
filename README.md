@@ -8,5 +8,5 @@ django-admin --version
 
 ## 程序启动
 ```python
-python manage.py GPT_TYPE:openai/hunyuan/...,OPENAI_KEY:xxxx[,...] runserver 0.0.0.0:8000
+python manage.py GPT_TYPE:openai/wenxin/...,OPENAI_KEY:xxxx[,...] runserver 0.0.0.0:8000
 ```

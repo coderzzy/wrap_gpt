@@ -1,6 +1,7 @@
 import time
 import pandas as pd
 import openai
+import erniebot
 
 # 批量处理，对外提供接口
 def batchProcess(gpt_type, api_key,  
@@ -27,12 +28,26 @@ def modelConfig_content(gpt_type, api_key,
                         input_text, temperature_config, model_config, system_prompt):
     print("system_prompt："+system_prompt)
     result = ''
-    if gpt_type == 'hunyuan':
-        # hunyuan
-        print('hunyuan')
+    if gpt_type == 'wenxin':
+        # 文心一言
+        print('wenxin')
+        response = erniebot.ChatCompletion.create(
+            _config_=dict(
+                api_type="aistudio",
+                access_token=api_key,
+            ),
+            model="ernie-bot",
+            messages=[
+                {"role": "user", "content": f"{system_prompt}"},
+                {"role": "assistant", "content": "好的"},
+                {"role": "user", "content": f"{input_text}"}
+            ],
+        )
+        result = response['result']
     else:
         # openai
         # 默认是openai
+        print('openai')
         openai.api_key = api_key
         response = openai.ChatCompletion.create(
             model=model_config,
@@ -52,12 +67,28 @@ def modelConfig_batch(gpt_type, api_key,
                    input_text, maxtokens_config, temperature_config,model_config,
                    system_prompt, user_prompt, ex_user_prompt, ex_assistant_prompt):
     result=''
-    if gpt_type == 'hunyuan':
-        # hunyuan
-        print('hunyuan')
+    if gpt_type == 'wenxin':
+        # 文心一言
+        print('wenxin')
+        messages = [{"role": "user", "content": system_prompt}]
+        messages.append({"role": "assistant", "content": "好的"})
+        if ex_user_prompt != "" and ex_assistant_prompt != "":
+            messages.append({"role": "user", "content": ex_user_prompt})
+            messages.append({"role": "assistant", "content": ex_assistant_prompt})
+        messages.append({"role": "user", "content": f"{user_prompt}：{input_text}"})
+        response = erniebot.ChatCompletion.create(
+            _config_=dict(
+                api_type="aistudio",
+                access_token=api_key,
+            ),
+            model="ernie-bot",
+            messages=messages,
+        )
+        result = response['result']
     else:
         # openai
         # 默认是openai
+        print('openai')
         openai.api_key = api_key
         messages = [{"role": "system", "content": system_prompt}]
         if ex_user_prompt != "" and ex_assistant_prompt != "":
