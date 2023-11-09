@@ -1,8 +1,7 @@
 import openai
 
 import input_process
-from model_config import modelConfig_content
-from batch_process import batchProcess
+from model_config import modelConfig_content, batchProcess
 
 
 def run():
