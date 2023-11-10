@@ -27,7 +27,6 @@ def batchProcess(gpt_type, api_key,
 def modelConfig_content(gpt_type, api_key, 
                         input_text, temperature_config, model_config, system_prompt):
     print("system_prompt："+system_prompt)
-    print("input_text"+input_text)
     result = ''
     if gpt_type == 'wenxin':
         # 文心一言
@@ -41,7 +40,7 @@ def modelConfig_content(gpt_type, api_key,
             messages=[
                 {"role": "user", "content": f"{system_prompt}"},
                 {"role": "assistant", "content": "好的"},
-                {"role": "user", "content": f"{input_text}"}
+                {"role": "user", "content": f"{repr(input_text)}"}
             ],
         )
         result = response['result']
