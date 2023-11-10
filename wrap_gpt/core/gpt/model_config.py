@@ -27,6 +27,7 @@ def batchProcess(gpt_type, api_key,
 def modelConfig_content(gpt_type, api_key, 
                         input_text, temperature_config, model_config, system_prompt):
     print("system_prompt："+system_prompt)
+    print("input_text"+input_text)
     result = ''
     if gpt_type == 'wenxin':
         # 文心一言
