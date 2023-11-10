@@ -9,7 +9,7 @@ def content_process(input_path,
     # 内容读取
     file_type = input_path.split('.')[-1]
     input_text = ''
-    if file_type == "txt":
+    if file_type == "txt" or file_type == "py":
         input_text = file_read(input_path)
     elif file_type == "xlsx":
         input_text = excel_read(input_path)
