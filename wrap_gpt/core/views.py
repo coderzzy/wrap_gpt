@@ -22,6 +22,9 @@ def console(request):
     context = {'uploaded_excels': uploaded_excels}
     return render(request, 'console.html', context)
 
+def case(request):
+    return render(request, "case.html")
+
 ### 请求
 def upload_content(request):
     if is_ajax(request):

@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>职场小助手</title>
+    <!-- 标题栏icon -->
+    <link rel="icon" href="static/image/nLogo.jpg" type="image/x-icon">
+    <!-- 收藏夹icon -->
+    <link rel="shortcut icon" href="static/image/nLogo.jpg" type="image/x-icon">
+    <!-- layui -->
+    <link href="static/layui/css/layui.css" rel="stylesheet">
+    <link href="static/css/github-markdown.min.css" rel="stylesheet">
+    <script src="static/layui/layui.js"></script>
+    <script src="static/js/jquery.min.js"></script>
+    <script src="static/js/marked.min.js"></script>
+</head>
+<style>
+    .layui-tab-title{border-bottom: none;}/* 重置 - 去掉下划线 */
+    .layui-tab-title .layui-this{background: #FFAF09;}/* 增加背景 */
+    .layui-tab-title .layui-this:after{border: none;}/* 重置 -this无边框 */
+    .layui-tab-title li{display: list-item;}/* 重置 -纵向显示 */
+
+    .markdown-body {
+        box-sizing: border-box;
+        min-width: 200px;
+        max-width: 980px;
+        margin: 0 auto;
+        padding: 45px;
+    }
+  </style>
+<body style="background: #F0F0F0;">
+    {% include 'head.html' %}
+    <div class="layui-fluid" style="height: 90vh; overflow-y: scroll;">
+        <div class="layui-tab">
+          <ul class="layui-tab-title layui-col-md2">
+              <li onclick="show('content')">单文本</li>
+              <li onclick="show('excel')" class="layui-this">批处理</li>
+              <li>微调</li>
+          </ul>
+          <div class="layui-tab-content  layui-col-md10">
+            <div class="layui-tab-item">
+                <div id="content" style="margin-left: 20px" class="markdown-body"></div>
+            </div>
+            <div class="layui-tab-item layui-show">
+                <div id="excel" style="margin-left: 20px" class="markdown-body"></div>
+            </div>
+            <div class="layui-tab-item">
+                微调
+            </div>
+          </div>
+    
+
+    <script>
+        $(function(){
+            //读取md文件 显示
+            name = 'excel'
+            $.ajax({
+                url: `static/cases_md/${name}.md`,
+                type: "GET",
+                dataType: "text",
+                async: false,
+                success: function (data) {
+                    $(`#${name}`).html(marked(data));
+                }
+            })
+        })
+
+        function show(name){
+            //读取md文件 显示
+            $.ajax({
+                url: `static/cases_md/${name}.md`,
+                type: "GET",
+                dataType: "text",
+                async: false,
+                success: function (data) {
+                    $(`#${name}`).html(marked(data));
+                }
+            })
+        }
+    </script>
+</body>
+</html>
