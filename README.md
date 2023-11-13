@@ -1,9 +1,19 @@
 # GPT封装
 
-## Django安装
+## Django等环境安装
 ```
+# pip install -r requirements.txt
+
 pip install django
+pip install django-browser-reload
+pip install openai
+pip install erniebot
+pip install tiktoken
+pip install python-docx
+pip install PyPDF2
+
 django-admin --version
+
 ```
 
 ## 程序启动

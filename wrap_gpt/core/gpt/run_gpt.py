@@ -1,6 +1,6 @@
 import os
 from .model_config import modelConfig_content, batchProcess
-from .input_process import file_read, excel_read
+from .input_process import txt_read, excel_read, word_read, pdf_read
 
 def content_process(input_path, 
                     timesleep_config, maxtokens_config, temperature_config, model_config, 
@@ -10,9 +10,13 @@ def content_process(input_path,
     file_type = input_path.split('.')[-1]
     input_text = ''
     if file_type == "txt" or file_type == "py":
-        input_text = file_read(input_path)
+        input_text = txt_read(input_path)
     elif file_type == "xlsx":
         input_text = excel_read(input_path)
+    elif file_type == "docx":
+        input_text = word_read(input_path)
+    elif file_type == "pdf":
+        input_text = pdf_read(input_path)
     # gpt
     gpt_type = os.environ.get('GPT_TYPE')
     api_key = ''
