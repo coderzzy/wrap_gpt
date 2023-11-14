@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.http import HttpResponse, JsonResponse
 from django.core.files.storage import FileSystemStorage
 import os
+import traceback
 import threading
 from wrap_gpt.core.constants import CONTENT_ROOT, EXCEL_ROOT
 from wrap_gpt.core.gpt.run_gpt import content_process, excel_process
@@ -38,17 +39,21 @@ def upload_content(request):
             system_prompt = str(request.POST.get('system_prompt'))
             if system_prompt == '':
                 return JsonResponse({'status':'error','message':'prompt不能为空'}, safe=False)
-            # file
-            uploaded_file = request.FILES['file']
-            fs = FileSystemStorage()
-            file_name = uploaded_file.name
-            filepath = fs.save(os.path.join(CONTENT_ROOT, file_name), uploaded_file)
-            # process
-            input_path = filepath
-            result = content_process(input_path, 
-                    timesleep_config, maxtokens_config, temperature_config, model_config, 
-                    system_prompt)
-            return JsonResponse({'status':'success', 'data':{'file_name': file_name, 'result': result}}, safe=False)
+            try:
+                # file
+                uploaded_file = request.FILES['file']
+                fs = FileSystemStorage()
+                file_name = uploaded_file.name
+                filepath = fs.save(os.path.join(CONTENT_ROOT, file_name), uploaded_file)
+                # process
+                input_path = filepath
+                result = content_process(input_path, 
+                        timesleep_config, maxtokens_config, temperature_config, model_config, 
+                        system_prompt)
+                return JsonResponse({'status':'success', 'data':{'file_name': file_name, 'result': result}}, safe=False)
+            except Exception as e:
+                traceback.print_exc()
+                return JsonResponse({'status':'error', 'message':str(e)}, safe=False)
     return JsonResponse({'status':'error','message':'内部异常'}, safe=False)
 
 
@@ -71,20 +76,24 @@ def upload_excel(request):
                 return JsonResponse({'status':'error','message':'列名不能为空'}, safe=False)
             if system_prompt == '' or user_prompt == '':
                 return JsonResponse({'status':'error','message':'prompt不能为空'}, safe=False)
+            try:
             # file
-            uploaded_file = request.FILES['file']
-            fs = FileSystemStorage()
-            origin_filename = uploaded_file.name
-            filepath = fs.save(os.path.join(EXCEL_ROOT, 'unfinished_'+origin_filename), uploaded_file)
-            # process
-            input_path = filepath
-            output_path = os.path.join(EXCEL_ROOT, f'finished_{origin_filename}')
-            thread = threading.Thread(target=excel_process, 
-                                      args=(input_path, output_path, input_column_name, output_column_name,
-                                            timesleep_config, maxtokens_config, temperature_config, model_config,
-                                            system_prompt, user_prompt, ex_user_prompt, ex_assistant_prompt,))
-            thread.start()
-            return JsonResponse({'status':'success'}, safe=False)
+                uploaded_file = request.FILES['file']
+                fs = FileSystemStorage()
+                origin_filename = uploaded_file.name
+                filepath = fs.save(os.path.join(EXCEL_ROOT, 'unfinished_'+origin_filename), uploaded_file)
+                # process
+                input_path = filepath
+                output_path = os.path.join(EXCEL_ROOT, f'finished_{origin_filename}')
+                thread = threading.Thread(target=excel_process, 
+                                        args=(input_path, output_path, input_column_name, output_column_name,
+                                                timesleep_config, maxtokens_config, temperature_config, model_config,
+                                                system_prompt, user_prompt, ex_user_prompt, ex_assistant_prompt,))
+                thread.start()
+                return JsonResponse({'status':'success'}, safe=False)
+            except Exception as e:
+                traceback.print_exc()
+                return JsonResponse({'status':'error', 'message':str(e)}, safe=False)
     return JsonResponse({'status':'error','message':'内部异常'}, safe=False)
 
 
