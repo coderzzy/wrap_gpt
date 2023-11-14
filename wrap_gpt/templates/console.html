@@ -42,9 +42,12 @@
                       <div class="layui-form-item">
                         <div class="layui-inline">
                           <label class="layui-form-label">模型版本&nbsp;<span style="color:red">*</span></label>
-                          <div class="layui-input-inline" style="width: 200px;">
-                            <input id="content_model_config" type="text" name="" autocomplete="off" class="layui-input" value="gpt-3.5-turbo">
-                          </div>
+                          <div class="layui-inline layui-form" style="width: 200px">
+                            <select id="content_model_config">
+                              <option value="gpt-3.5-turbo" selected>OPENAI-GPT3.5</option>
+                              <option value="ernie-bot">百度-文心一言3.5</option>
+                            </select>
+                          </div>                         
                         </div>
                       </div>
                         <div class="layui-collapse">
@@ -127,8 +130,11 @@
                           <div class="layui-form-item">
                             <div class="layui-inline">
                               <label class="layui-form-label">模型版本&nbsp;<span style="color:red">*</span></label>
-                              <div class="layui-input-inline" style="width: 200px;">
-                                <input id="excel_model_config" type="text" name="" autocomplete="off" class="layui-input" value="gpt-3.5-turbo">
+                              <div class="layui-inline layui-form" style="width: 200px">
+                                <select id="content_model_config">
+                                  <option value="gpt-3.5-turbo" selected>OPENAI-GPT3.5</option>
+                                  <option value="ernie-bot">百度-文心一言3.5</option>
+                                </select>
                               </div>
                             </div>
                             <div class="layui-inline">

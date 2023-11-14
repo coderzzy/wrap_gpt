@@ -36,7 +36,7 @@ def modelConfig_content(gpt_type, api_key,
                 api_type="aistudio",
                 access_token=api_key,
             ),
-            model="ernie-bot",
+            model=model_config,
             messages=[
                 {"role": "user", "content": f"{system_prompt}"},
                 {"role": "assistant", "content": "好的"},
@@ -81,7 +81,7 @@ def modelConfig_batch(gpt_type, api_key,
                 api_type="aistudio",
                 access_token=api_key,
             ),
-            model="ernie-bot",
+            model=model_config,
             messages=messages,
         )
         result = response['result']

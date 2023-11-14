@@ -18,16 +18,7 @@ def content_process(input_path,
     elif file_type == "pdf":
         input_text = pdf_read(input_path)
     # gpt
-    gpt_type = os.environ.get('GPT_TYPE')
-    api_key = ''
-    if gpt_type == 'wenxin':
-        # wenxin
-        api_key = os.environ.get('WENXIN_TOKEN')
-    else:
-        # openai
-        # 默认是openai
-        api_key = os.environ.get('OPENAI_KEY')
-        
+    gpt_type, api_key = get_gpt_type(model_config)
     result = modelConfig_content(gpt_type, api_key, 
                                  input_text, temperature_config, model_config, system_prompt)
     os.remove(input_path)
@@ -40,19 +31,20 @@ def excel_process(input_path, output_path, column_name, output_column_name,
                      system_prompt, user_prompt, ex_user_prompt, ex_assistant_prompt):
     print('start')
     # gpt
-    gpt_type = os.environ.get('GPT_TYPE')
-    api_key = ''
-    if gpt_type == 'wenxin':
-        # wenxin
-        api_key = os.environ.get('WENXIN_TOKEN')
-    else:
-        # openai
-        # 默认是openai
-        api_key = os.environ.get('OPENAI_KEY')
-
+    gpt_type, api_key = get_gpt_type(model_config)
     batchProcess(gpt_type, api_key, 
                     input_path, output_path, column_name, output_column_name,
                     timesleep_config, maxtokens_config, temperature_config, model_config,
                     system_prompt, user_prompt, ex_user_prompt, ex_assistant_prompt)
     os.remove(input_path)
     print('end')
+
+
+def get_gpt_type(model_config):
+    # gpt_type，默认是openai
+    gpt_type = "openai"
+    api_key = os.environ.get('OPENAI_KEY')
+    if "ernie" in model_config:
+        gpt_type = 'wenxin'
+        api_key = os.environ.get('WENXIN_TOKEN') 
+    return gpt_type,api_key
