@@ -36,6 +36,8 @@ def upload_content(request):
             temperature_config = float(request.POST.get('temperature_config'))
             model_config = request.POST.get('model_config')
             system_prompt = str(request.POST.get('system_prompt'))
+            if system_prompt == '':
+                return JsonResponse({'status':'error','message':'prompt不能为空'}, safe=False)
             # file
             uploaded_file = request.FILES['file']
             fs = FileSystemStorage()
@@ -46,8 +48,8 @@ def upload_content(request):
             result = content_process(input_path, 
                     timesleep_config, maxtokens_config, temperature_config, model_config, 
                     system_prompt)
-            return JsonResponse({'file_name': file_name, 'result': result}, safe=False)
-    return JsonResponse('error', safe=False)
+            return JsonResponse({'status':'success', 'data':{'file_name': file_name, 'result': result}}, safe=False)
+    return JsonResponse({'status':'error','message':'内部异常'}, safe=False)
 
 
 def upload_excel(request):
@@ -65,6 +67,10 @@ def upload_excel(request):
             user_prompt = request.POST.get('user_prompt')
             ex_user_prompt = request.POST.get('ex_user_prompt')
             ex_assistant_prompt = request.POST.get('ex_assistant_prompt')
+            if input_column_name == '' or output_column_name == '':
+                return JsonResponse({'status':'error','message':'列名不能为空'}, safe=False)
+            if system_prompt == '' or user_prompt == '':
+                return JsonResponse({'status':'error','message':'prompt不能为空'}, safe=False)
             # file
             uploaded_file = request.FILES['file']
             fs = FileSystemStorage()
@@ -78,8 +84,8 @@ def upload_excel(request):
                                             timesleep_config, maxtokens_config, temperature_config, model_config,
                                             system_prompt, user_prompt, ex_user_prompt, ex_assistant_prompt,))
             thread.start()
-            return JsonResponse(filepath, safe=False)
-    return JsonResponse('error', safe=False)
+            return JsonResponse({'status':'success'}, safe=False)
+    return JsonResponse({'status':'error','message':'内部异常'}, safe=False)
 
 
 def download_excel(request, file_name):

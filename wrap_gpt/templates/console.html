@@ -39,6 +39,14 @@
                         <p>基础配置</p>
                     </div>
                     <div class="layui-panel layui-row" style="padding: 10px;">
+                      <div class="layui-form-item">
+                        <div class="layui-inline">
+                          <label class="layui-form-label">模型版本&nbsp;<span style="color:red">*</span></label>
+                          <div class="layui-input-inline" style="width: 200px;">
+                            <input id="content_model_config" type="text" name="" autocomplete="off" class="layui-input" value="gpt-3.5-turbo">
+                          </div>
+                        </div>
+                      </div>
                         <div class="layui-collapse">
                           <div class="layui-colla-item">
                             <h2 class="layui-colla-title">其他设置</h2>
@@ -61,12 +69,6 @@
                                   <input id="content_temperature_config" type="text" name="" autocomplete="off" class="layui-input" value="1">
                                 </div>
                               </div>
-                              <div class="layui-inline">
-                                <label class="layui-form-label">模型版本</label>
-                                <div class="layui-input-inline" style="width: 200px;">
-                                  <input id="content_model_config" type="text" name="" autocomplete="off" class="layui-input" value="gpt-3.5-turbo">
-                                </div>
-                              </div>
                             </div>
                           </div>
                         </div>
@@ -80,9 +82,9 @@
                     <div class="layui-panel layui-row" style="padding: 10px;">
                       <div class="layui-form-item">
                         <div class="layui-inline">
-                          <label class="layui-form-label">系统prompt</label>
+                          <label class="layui-form-label" style="width: 100px;">系统prompt&nbsp;<span style="color:red">*</span></label>
                           <div class="layui-input-inline" style="width: 300px;">
-                            <textarea id="content_system_prompt" name="" type='text' placeholder="请输入" class="layui-textarea"></textarea>
+                            <textarea id="content_system_prompt" name="" type='text' placeholder="e.g., 总结文档" class="layui-textarea"></textarea>
                           </div>
                         </div>
                       </div>
@@ -91,7 +93,7 @@
                   <!-- 文件上传 -->
                   <div class="layui-col-md12" style="margin-top:10px;">
                     <div class="layui-panel" style="padding: 10px; font-weight: bolder;">
-                      <p>文件上传</p>
+                      <p>文件上传 &nbsp;&nbsp;<span style="font-size:12px; color: red">请先填写prompt，再上传文件</span></p>
                     </div>
                     <div class="layui-upload-drag" style="display: block;" id="content-upload-drag">
                         <i class="layui-icon layui-icon-upload"></i> 
@@ -124,15 +126,21 @@
                       <div class="layui-panel layui-row" style="padding: 10px;">
                           <div class="layui-form-item">
                             <div class="layui-inline">
-                              <label class="layui-form-label">处理列名</label>
+                              <label class="layui-form-label">模型版本&nbsp;<span style="color:red">*</span></label>
                               <div class="layui-input-inline" style="width: 200px;">
-                                <input id="excel_input_column_name" type="text" name="" autocomplete="off" class="layui-input">
+                                <input id="excel_model_config" type="text" name="" autocomplete="off" class="layui-input" value="gpt-3.5-turbo">
                               </div>
                             </div>
                             <div class="layui-inline">
-                              <label class="layui-form-label">输出列名</label>
+                              <label class="layui-form-label">处理列名&nbsp;<span style="color:red">*</span></label>
                               <div class="layui-input-inline" style="width: 200px;">
-                                <input id="excel_output_column_name" type="text" name="" autocomplete="off" class="layui-input">
+                                <input id="excel_input_column_name" type="text" name="" autocomplete="off" class="layui-input" placeholder="e.g., 商品销售名称">
+                              </div>
+                            </div>
+                            <div class="layui-inline">
+                              <label class="layui-form-label">输出列名&nbsp;<span style="color:red">*</span></label>
+                              <div class="layui-input-inline" style="width: 200px;">
+                                <input id="excel_output_column_name" type="text" name="" autocomplete="off" class="layui-input" placeholder="e.g., GPT处理">
                               </div>
                             </div>
                           </div>
@@ -158,12 +166,6 @@
                                     <input id="excel_temperature_config" type="text" name="" autocomplete="off" class="layui-input" value="1">
                                   </div>
                                 </div>
-                                <div class="layui-inline">
-                                  <label class="layui-form-label">模型版本</label>
-                                  <div class="layui-input-inline" style="width: 200px;">
-                                    <input id="excel_model_config" type="text" name="" autocomplete="off" class="layui-input" value="gpt-3.5-turbo">
-                                  </div>
-                                </div>
                               </div>
                             </div>
                           </div>
@@ -177,15 +179,15 @@
                       <div class="layui-panel layui-row" style="padding: 10px;">
                         <div class="layui-form-item">
                           <div class="layui-inline">
-                            <label class="layui-form-label">系统prompt</label>
+                            <label class="layui-form-label" style='width: 100px;'>系统prompt&nbsp;<span style="color:red">*</span></label>
                             <div class="layui-input-inline" style="width: 300px;">
-                              <textarea id="excel_system_prompt" name="" type='text' placeholder="请输入" class="layui-textarea"></textarea>
+                              <textarea id="excel_system_prompt" name="" type='text' placeholder="e.g., 结果输出不超过10个词，且不出现'搜索词'和'关键词'字样，并将所有词都用；连接成一行" class="layui-textarea"></textarea>
                             </div>
                           </div>
                           <div class="layui-inline">
-                            <label class="layui-form-label">用户prompt</label>
+                            <label class="layui-form-label" style='width: 100px;'>用户prompt&nbsp;<span style="color:red">*</span></label>
                             <div class="layui-input-inline" style="width: 300px;">
-                              <textarea id="excel_user_prompt" name="" type='text' placeholder="请输入" class="layui-textarea"></textarea>
+                              <textarea id="excel_user_prompt" name="" type='text' placeholder="e.g., 请帮我提取商品中4个关键词，并扩展5个极有可能能够搜索到该商品的搜索词" class="layui-textarea"></textarea>
                             </div>
                           </div>
                         </div>
@@ -215,7 +217,7 @@
                     <!-- 文件上传 -->
                     <div class="layui-col-md12">
                       <div class="layui-panel" style="padding: 10px; font-weight: bolder;">
-                        <p>文件上传</p>
+                        <p>文件上传&nbsp;&nbsp;<span style="font-size:12px; color: red">请先填写配置和prompt，再上传文件</span></p>
                       </div>
                       <div class="layui-upload-drag" style="display: block;" id="excel-upload-drag">
                           <i class="layui-icon layui-icon-upload"></i> 
@@ -284,16 +286,16 @@
           },
           done: function(res){
             layer.close(load);
-            if (res=='error') {
-              layer.msg('内部异常');
+            if (res.status=='error') {
+              layer.msg(res.message);
             } else {
               layer.msg('上传并分析成功');
-              $('#content-result').val('文件名: '+res.file_name + '\r\n分析: '+res.result)
+              $('#content-result').val('文件名: '+res.data.file_name + '\r\n分析: '+res.data.result)
             }
           },
           error: function(res){
             layer.close(load);
-            layer.msg('内部异常');
+            layer.msg('网络异常');
           }
         });
 
@@ -320,8 +322,8 @@
           },
           done: function(res){
             layer.close(load);
-            if (res=='error') {
-              layer.msg('内部异常');
+            if (res.status=='error') {
+              layer.msg(res.message);
             } else {
               layer.msg('上传成功');
               window.location.href = "{% url 'console' %}";
@@ -329,7 +331,7 @@
           },
           error: function(res){
             layer.close(load);
-            layer.msg('内部异常');
+            layer.msg('网络异常');
           }
         });
       });

@@ -4,6 +4,7 @@
 ```
 # pip install -r requirements.txt
 
+pip install pandas
 pip install django
 pip install django-browser-reload
 pip install openai
