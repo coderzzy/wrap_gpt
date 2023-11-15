@@ -1,6 +1,7 @@
 from django.shortcuts import render
-from django.http import HttpResponse, JsonResponse
+from django.http import HttpResponse, JsonResponse, StreamingHttpResponse
 from django.core.files.storage import FileSystemStorage
+from django.views.decorators.csrf import csrf_protect, csrf_exempt
 import os
 import traceback
 import threading
@@ -25,6 +26,9 @@ def console(request):
 
 def case(request):
     return render(request, "case.html")
+
+def lab(request):
+    return render(request, "lab.html")
 
 ### 请求
 def upload_content(request):
@@ -116,4 +120,33 @@ def delete_excel(request):
         os.remove(file_path)
         return JsonResponse('success', safe=False)
     return JsonResponse('error', safe=False)
+
+from openai import OpenAI
+import json
+# do_lab，忽略 CSRF 校验
+@csrf_exempt
+def do_lab(request):
+    data = json.loads(request.body)
+    user_input = data.get('input')
+    client = OpenAI(
+        # defaults to os.environ.get("OPENAI_API_KEY")
+        api_key=os.environ.get('OPENAI_KEY'),
+    )
+    completion = client.chat.completions.create(
+        model="gpt-3.5-turbo",
+        messages=[
+            {"role": "user", "content": user_input}
+        ],
+        stream=True
+    )
+
+    def get_streaming_content(completion):
+        for chunk in completion:
+            content = chunk.choices[0].delta.content
+            if not content:
+                content = '~'
+            yield content
+
+    response = StreamingHttpResponse(get_streaming_content(completion), content_type='application/octet-stream')
+    return response
 

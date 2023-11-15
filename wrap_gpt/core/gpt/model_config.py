@@ -1,6 +1,6 @@
 import time
 import pandas as pd
-import openai
+from openai import OpenAI
 import erniebot
 
 # 批量处理，对外提供接口
@@ -48,8 +48,11 @@ def modelConfig_content(gpt_type, api_key,
         # openai
         # 默认是openai
         print('openai')
-        openai.api_key = api_key
-        response = openai.ChatCompletion.create(
+        client = OpenAI(
+            # defaults to os.environ.get("OPENAI_API_KEY")
+            api_key=api_key,
+        )
+        response = client.ChatCompletion.create(
             model=model_config,
             messages=[
                 {"role": "system", "content": f"{system_prompt}"},
@@ -89,13 +92,16 @@ def modelConfig_batch(gpt_type, api_key,
         # openai
         # 默认是openai
         print('openai')
-        openai.api_key = api_key
+        client = OpenAI(
+            # defaults to os.environ.get("OPENAI_API_KEY")
+            api_key=api_key,
+        )
         messages = [{"role": "system", "content": system_prompt}]
         if ex_user_prompt != "" and ex_assistant_prompt != "":
             messages.append({"role": "user", "content": ex_user_prompt})
             messages.append({"role": "assistant", "content": ex_assistant_prompt})
         messages.append({"role": "user", "content": f"{user_prompt}：{input_text}"})
-        response = openai.ChatCompletion.create(
+        response = client.ChatCompletion.create(
             model=model_config,
             messages = messages,
             max_tokens=maxtokens_config,

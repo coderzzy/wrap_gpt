@@ -6,6 +6,8 @@
 - 文件列表，且状态为未处理
 - 刷新页面，等待状态为处理后，下载处理后的文件
 
+![avatar](static/cases_md/images/excel_guide.jpg)
+
 ### Case1-Excel批量打标签
 - 基础配置
     - 处理列名: 商品销售名称
