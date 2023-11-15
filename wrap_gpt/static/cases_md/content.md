@@ -5,6 +5,8 @@
 - 上传文件
 - 当前页面等待解析结果
 
+![avatar](static/cases_md/images/content_guide.jpg)
+
 ### Case1-代码识别
 - 无特殊配置
 - prompt: 请解释python代码
