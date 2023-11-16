@@ -1,8 +1,10 @@
 import os
-from .model_config import modelConfig_content, batchProcess
-from .input_process import txt_read, excel_read, word_read, pdf_read
+from wrap_gpt.core.gpt.model_config import modelConfig_content_stream_response, modelConfig_content_stream_result, batchProcess
+from wrap_gpt.core.gpt.input_process import txt_read, excel_read, word_read, pdf_read
 
-def content_process(input_path, 
+
+# 单文本处理，选择流式方案
+def content_stream_response(input_path,
                     timesleep_config, maxtokens_config, temperature_config, model_config, 
                     system_prompt):
     print('start')
@@ -19,13 +21,19 @@ def content_process(input_path,
         input_text = pdf_read(input_path)
     # gpt
     gpt_type, api_key = get_gpt_type(model_config)
-    result = modelConfig_content(gpt_type, api_key, 
-                                 input_text, temperature_config, model_config, system_prompt)
+    response = modelConfig_content_stream_response(gpt_type, api_key,
+                                 input_text, maxtokens_config, temperature_config, model_config, system_prompt)
     os.remove(input_path)
     print('end')
-    return result
+    return gpt_type, response
 
 
+def content_stream_result(gpt_type, response):
+    print('stream_result')
+    return modelConfig_content_stream_result(gpt_type, response)
+
+
+# excel批处理，非流式方案
 def excel_process(input_path, output_path, column_name, output_column_name,
                      timesleep_config, maxtokens_config, temperature_config, model_config,
                      system_prompt, user_prompt, ex_user_prompt, ex_assistant_prompt):
@@ -47,4 +55,4 @@ def get_gpt_type(model_config):
     if "ernie" in model_config:
         gpt_type = 'wenxin'
         api_key = os.environ.get('WENXIN_TOKEN') 
-    return gpt_type,api_key
+    return gpt_type, api_key

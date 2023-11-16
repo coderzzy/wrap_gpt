@@ -295,8 +295,52 @@
             if (res.status=='error') {
               layer.msg(res.message);
             } else {
-              layer.msg('上传并分析成功');
-              $('#content-result').val('文件名: '+res.data.file_name + '\r\n分析: '+res.data.result)
+              layer.msg('上传成功，开始分析');
+              // 上传完成后，开始流式处理
+                $('#content-result').val('文件名: '+res.data.file_name + '\r\n分析: \r\n')
+                fetch('stream_content', {
+                  method: 'POST',
+                  headers: {
+                    'Content-Type': 'application/json'
+                  },
+                  body: JSON.stringify({
+                      timesleep_config: $('#content_timesleep_config').val(),
+                      maxtokens_config: $('#content_maxtokens_config').val(),
+                      temperature_config: $('#content_temperature_config').val(),
+                      model_config: $('#content_model_config').val(),
+                      system_prompt: $('#content_system_prompt').val(),
+                      file_name: res.data.file_name
+                  }),
+              }).then(function (response) {
+                // 确保响应状态码正常
+                if (!response.ok) {
+                    console.log(response)
+                    layer.msg('系统异常');
+                }else{
+                    // 使用响应的ReadableStream来处理数据
+                    var reader = response.body.getReader();
+                    function read() {
+                        return reader.read().then(function (result) {
+                            // 处理读取到的数据
+                            if (!result.done) {
+                                var value = result.value;
+                                // 在这里处理接收到的数据，例如更新页面上的内容
+                                var decoder = new TextDecoder('utf-8')
+                                var chunk = decoder.decode(value)
+                                // 页面显示
+                                var currentContent = $('#content-result').val();
+                                $('#content-result').val(currentContent + chunk);
+                                // 继续读取下一块数据
+                                return read();
+                            }
+                        });
+                    }
+                    return read();
+                }
+              }).catch(function (error) {
+                  // 处理错误
+                  console.log(error)
+              });
             }
           },
           error: function(res){
