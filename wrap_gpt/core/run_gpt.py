@@ -64,6 +64,8 @@ def __get_gpt_type(model_config):
     if "ernie" in model_config:
         return "wenxin", os.environ.get('WENXIN_TOKEN')
     if "kdxf" in model_config:
-        return "kdxf", ""
+        return "kdxf", {"app_id": os.environ.get('KDXF_APPID'),
+                        "secret": os.environ.get('KDXF_SECRET'),
+                        "key": os.environ.get('KDXF_KEY')}
     # 默认是openai
     return "openai", os.environ.get('OPENAI_KEY')

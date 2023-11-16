@@ -17,9 +17,9 @@ answer = ""
 
 # api_key 为 {app_id:'', api_secret:'', api_key:''}
 def get_figure_response_and_result(api_key, image_data, system_prompt):
-    appid = "c9ff7d11"  # 填写控制台中获取的 APPID 信息
-    api_secret = "NGFiM2I5YWI5YWRkMGQ2MDNhOWE2NmU2"  # 填写控制台中获取的 APISecret 信息
-    api_key = "c2b5aa50eaec8d12538e0062c5d681e1"  # 填写控制台中获取的 APIKey 信息
+    appid = api_key['app_id']
+    api_secret = api_key['secret']
+    api_key = api_key['key']
 
     imageunderstanding_url = "wss://spark-api.cn-huabei-1.xf-yun.com/v2.1/image"  # 云端环境的服务地址
     text = [{"role": "user", "content": str(base64.b64encode(image_data), 'utf-8'), "content_type": "image"}]
