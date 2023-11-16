@@ -20,7 +20,7 @@ def content_stream_response(input_path,
     elif file_type == "pdf":
         input_text = pdf_read(input_path)
     # gpt
-    gpt_type, api_key = get_gpt_type(model_config)
+    gpt_type, api_key = __get_gpt_type(model_config)
     response = model.modelConfig_content_stream_response(gpt_type, api_key,
                                  input_text, maxtokens_config, temperature_config, model_config, system_prompt)
     os.remove(input_path)
@@ -39,7 +39,7 @@ def excel_process(input_path, output_path, column_name, output_column_name,
                      system_prompt, user_prompt, ex_user_prompt, ex_assistant_prompt):
     print('start')
     # gpt
-    gpt_type, api_key = get_gpt_type(model_config)
+    gpt_type, api_key = __get_gpt_type(model_config)
     model.batchProcess(gpt_type, api_key,
                     input_path, output_path, column_name, output_column_name,
                     timesleep_config, maxtokens_config, temperature_config, model_config,
@@ -53,17 +53,17 @@ def figure_process(input_path, maxtokens_config, model_config, system_prompt):
     image_data = None
     with open(input_path, "rb") as image_file:
         image_data = image_file.read()
-    gpt_type, api_key = get_gpt_type(model_config)
+    gpt_type, api_key = __get_gpt_type(model_config)
     os.remove(input_path)
     return model.modelConfig_figure(gpt_type, api_key,
                        image_data, model_config, maxtokens_config, system_prompt)
 
 
-def get_gpt_type(model_config):
-    # gpt_type，默认是openai
-    gpt_type = "openai"
-    api_key = os.environ.get('OPENAI_KEY')
+# return: gpt_type, api_key
+def __get_gpt_type(model_config):
     if "ernie" in model_config:
-        gpt_type = 'wenxin'
-        api_key = os.environ.get('WENXIN_TOKEN') 
-    return gpt_type, api_key
+        return "wenxin", os.environ.get('WENXIN_TOKEN')
+    if "kdxf" in model_config:
+        return "kdxf", ""
+    # 默认是openai
+    return "openai", os.environ.get('OPENAI_KEY')

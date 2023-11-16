@@ -2,6 +2,7 @@ import time
 import base64
 import pandas as pd
 import wrap_gpt.core.gpt.wenxin.wenxin as wenxin
+import wrap_gpt.core.gpt.kdxf.kdxf_figure_process as kdxf
 import wrap_gpt.core.gpt.openai.openai as openai
 
 
@@ -61,11 +62,8 @@ def modelConfig_content_stream_result(gpt_type, response):
 # 图片处理
 def modelConfig_figure(gpt_type, api_key,
                        image_data, model_config, maxtokens_config, system_prompt):
-    # if gpt_type == 'kdxf':
-    #     imagedata = open(image_path, 'rb').read()
-    #     # 科大讯飞有三个密钥：appid，api_secret，api_key。暂不传，固定在image_dress里面
-    #     image_process_kdxf.image_dress(imagedata, input_text)
-    #     return
+    if gpt_type == 'kdxf':
+        return kdxf.get_figure_response_and_result(api_key, image_data, system_prompt)
 
     # openai，默认是openai
     base64_image = base64.b64encode(image_data).decode('utf-8')

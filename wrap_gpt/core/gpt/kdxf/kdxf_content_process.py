@@ -1,7 +1,6 @@
 from kdxf import SparkApi
 
 text = []
-# length = 0
 
 def getText(role,content):
     jsoncon = {}
@@ -19,7 +18,7 @@ def getlength(text):
     return length
 
 def checklen(text):
-    while (getlength(text) > 8000):
+    while getlength(text) > 8000:
         del text[0]
     return text
 
