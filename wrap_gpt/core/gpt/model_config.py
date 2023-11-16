@@ -74,7 +74,6 @@ def modelConfig_content_stream_result(gpt_type, response):
     # if gpt_type == '':
 
     # openai，默认是openai
-    print('openai')
     return openai.get_result(response, stream=True)
 
 

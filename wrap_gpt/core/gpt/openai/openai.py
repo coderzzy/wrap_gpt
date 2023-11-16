@@ -5,6 +5,7 @@ def get_response(api_key,
                  input_text, model_config, temperature_config, maxtokens_config=3000,
                  system_prompt='', user_prompt='', ex_user_prompt='', ex_assistant_prompt='',
                  stream=False):
+    print(api_key)
     client = OpenAI(
         # defaults to os.environ.get("OPENAI_API_KEY")
         api_key=api_key,
