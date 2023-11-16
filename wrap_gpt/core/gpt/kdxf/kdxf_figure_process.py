@@ -1,4 +1,3 @@
-# https://www.xfyun.cn/doc/spark/Web.html#_1-%E6%8E%A5%E5%8F%A3%E8%AF%B4%E6%98%8E
 import _thread as thread
 import base64
 import datetime
@@ -6,26 +5,12 @@ import hashlib
 import hmac
 import json
 from urllib.parse import urlparse
-import ssl
 from datetime import datetime
 from time import mktime
 from urllib.parse import urlencode
 from wsgiref.handlers import format_date_time
-import websocket
 
 answer = ""
-
-# api_key 为 {app_id:'', api_secret:'', api_key:''}
-def get_figure_response_and_result(api_key, image_data, system_prompt):
-    appid = api_key['app_id']
-    api_secret = api_key['secret']
-    api_key = api_key['key']
-
-    imageunderstanding_url = "wss://spark-api.cn-huabei-1.xf-yun.com/v2.1/image"  # 云端环境的服务地址
-    text = [{"role": "user", "content": str(base64.b64encode(image_data), 'utf-8'), "content_type": "image"}]
-    question = checklen(generateText("user", system_prompt, text))
-    main(appid, api_key, api_secret, imageunderstanding_url, image_data, question)
-    return answer
 
 
 # 生成url
@@ -124,10 +109,7 @@ def gen_params(appid, question):
 
 
 def generateText(role, content, text):
-    jsoncon = {}
-    jsoncon["role"] = role
-    jsoncon["content"] = content
-    text.append(jsoncon)
+    text.append({"role": role, "content": content})
     return text
 
 
@@ -147,16 +129,6 @@ def checklen(text):
     return text
 
 
-def main(appid, api_key, api_secret, imageunderstanding_url, imagedata, question):
-
-    websocket.enableTrace(False)
-    ws_url = create_url(api_key, api_secret, imageunderstanding_url)
-    ws = websocket.WebSocketApp(ws_url,
-                                on_message=on_message, on_error=on_error, on_close=on_close, on_open=on_open)
-    ws.appid = appid
-    ws.imagedata = imagedata
-    ws.question = question
-    ws.run_forever(sslopt={"cert_reqs": ssl.CERT_NONE})
 
 
 

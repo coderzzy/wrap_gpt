@@ -2,7 +2,7 @@ import time
 import base64
 import pandas as pd
 import wrap_gpt.core.gpt.wenxin.wenxin as wenxin
-import wrap_gpt.core.gpt.kdxf.kdxf_figure_process as kdxf
+import wrap_gpt.core.gpt.kdxf.kdxf as kdxf
 import wrap_gpt.core.gpt.openai.openai as openai
 
 
@@ -17,7 +17,6 @@ def modelConfig_content(gpt_type, api_key,
         result = wenxin.get_result(response)
         print("result："+result)
         return result
-    # if gpt_type == '':
 
     # openai，默认是openai
     print('openai')
@@ -38,7 +37,6 @@ def modelConfig_content_stream_response(gpt_type, api_key,
         print('wenxin')
         response = wenxin.get_response(api_key, input_text, model_config, system_prompt, stream=True)
         return response
-    # if gpt_type == '':
 
     # openai，默认是openai
     print('openai')
@@ -53,7 +51,6 @@ def modelConfig_content_stream_result(gpt_type, response):
     if gpt_type == 'wenxin':
         # 文心一言
         return wenxin.get_result(response, stream=True)
-    # if gpt_type == '':
 
     # openai，默认是openai
     return openai.get_result(response, stream=True)
@@ -81,7 +78,7 @@ def batchProcess(gpt_type, api_key,
     generated_texts = []
     for index, row in df.iterrows():
         input_text = row[column_name]  # 从指定列获取文本
-        generated_text = modelConfig_batch(gpt_type, api_key,
+        generated_text = __modelConfig_batch(gpt_type, api_key,
                                            input_text, maxtokens_config, temperature_config, model_config,
                                            system_prompt, user_prompt, ex_user_prompt, ex_assistant_prompt)
         generated_texts.append(generated_text)
@@ -92,7 +89,7 @@ def batchProcess(gpt_type, api_key,
 
 
 # 对内: 批处理excel2excel
-def modelConfig_batch(gpt_type, api_key,
+def __modelConfig_batch(gpt_type, api_key,
                    input_text, maxtokens_config, temperature_config,model_config,
                    system_prompt, user_prompt, ex_user_prompt, ex_assistant_prompt):
     if gpt_type == 'wenxin':
@@ -102,8 +99,6 @@ def modelConfig_batch(gpt_type, api_key,
                                        input_text, model_config,
                                        system_prompt, user_prompt, ex_user_prompt, ex_assistant_prompt)
         return wenxin.get_result(response)
-
-    # if gpt_type == '':
 
     # openai，默认是openai
     print('openai')
