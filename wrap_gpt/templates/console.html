@@ -333,10 +333,12 @@
                                 // 继续读取下一块数据
                                 return read();
                             }
+                            layer.msg('处理完成!')
                         });
                     }
                     return read();
                 }
+
               }).catch(function (error) {
                   // 处理错误
                   console.log(error)
