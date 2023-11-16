@@ -1,5 +1,5 @@
 import os
-from wrap_gpt.core.gpt.model_config import modelConfig_content_stream_response, modelConfig_content_stream_result, batchProcess
+import wrap_gpt.core.gpt.model_config as model
 from wrap_gpt.core.gpt.input_process import txt_read, excel_read, word_read, pdf_read
 
 
@@ -21,7 +21,7 @@ def content_stream_response(input_path,
         input_text = pdf_read(input_path)
     # gpt
     gpt_type, api_key = get_gpt_type(model_config)
-    response = modelConfig_content_stream_response(gpt_type, api_key,
+    response = model.modelConfig_content_stream_response(gpt_type, api_key,
                                  input_text, maxtokens_config, temperature_config, model_config, system_prompt)
     os.remove(input_path)
     print('end')
@@ -30,7 +30,7 @@ def content_stream_response(input_path,
 
 def content_stream_result(gpt_type, response):
     print('stream_result')
-    return modelConfig_content_stream_result(gpt_type, response)
+    return model.modelConfig_content_stream_result(gpt_type, response)
 
 
 # excel批处理，非流式方案
@@ -40,12 +40,23 @@ def excel_process(input_path, output_path, column_name, output_column_name,
     print('start')
     # gpt
     gpt_type, api_key = get_gpt_type(model_config)
-    batchProcess(gpt_type, api_key, 
+    model.batchProcess(gpt_type, api_key,
                     input_path, output_path, column_name, output_column_name,
                     timesleep_config, maxtokens_config, temperature_config, model_config,
                     system_prompt, user_prompt, ex_user_prompt, ex_assistant_prompt)
     os.remove(input_path)
     print('end')
+
+
+# 图片处理，非流式方案
+def figure_process(input_path, maxtokens_config, model_config, system_prompt):
+    image_data = None
+    with open(input_path, "rb") as image_file:
+        image_data = image_file.read()
+    gpt_type, api_key = get_gpt_type(model_config)
+    os.remove(input_path)
+    return model.modelConfig_figure(gpt_type, api_key,
+                       image_data, model_config, maxtokens_config, system_prompt)
 
 
 def get_gpt_type(model_config):

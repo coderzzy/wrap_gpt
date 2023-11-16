@@ -24,9 +24,9 @@ def checklen(text):
     return text
 
 def content_dress(file_content, input_text):
-    appid = "c9ff7d11"  # 填写控制台中获取的 APPID 信息
-    api_secret = "NGFiM2I5YWI5YWRkMGQ2MDNhOWE2NmU2"  # 填写控制台中获取的 APISecret 信息
-    api_key = "c2b5aa50eaec8d12538e0062c5d681e1"  # 填写控制台中获取的 APIKey 信息
+    appid = ""  # 填写控制台中获取的 APPID 信息
+    api_secret = ""  # 填写控制台中获取的 APISecret 信息
+    api_key = ""  # 填写控制台中获取的 APIKey 信息
 
     domain = "generalv3"  # v3.0版本
     # domain = "generalv2"    # v2.0版本

@@ -5,8 +5,8 @@ import threading
 from django.http import HttpResponse, JsonResponse, StreamingHttpResponse
 from django.core.files.storage import FileSystemStorage
 from django.views.decorators.csrf import csrf_exempt
-from wrap_gpt.core.constants import CONTENT_ROOT, EXCEL_ROOT
-from wrap_gpt.core.run_gpt import content_stream_response, content_stream_result, excel_process
+from wrap_gpt.core.constants import CONTENT_ROOT, EXCEL_ROOT, FIGURE_ROOT
+import wrap_gpt.core.run_gpt as gpt
 
 
 def is_ajax(request):
@@ -51,12 +51,11 @@ def stream_content(request):
     system_prompt = data.get('system_prompt')
     file_name = data.get('file_name')
     # process
-    os.path.join(CONTENT_ROOT, file_name)
     input_path = os.path.join(CONTENT_ROOT, file_name)
-    gpt_type, response = content_stream_response(input_path,
+    gpt_type, response = gpt.content_stream_response(input_path,
                              timesleep_config, maxtokens_config, temperature_config, model_config,
                              system_prompt)
-    response = StreamingHttpResponse(content_stream_result(gpt_type, response),
+    response = StreamingHttpResponse(gpt.content_stream_result(gpt_type, response),
                                      content_type='application/octet-stream')
     return response
 
@@ -90,7 +89,7 @@ def upload_excel(request):
                 # process
                 input_path = filepath
                 output_path = os.path.join(EXCEL_ROOT, f'finished_{origin_filename}')
-                thread = threading.Thread(target=excel_process,
+                thread = threading.Thread(target=gpt.excel_process,
                                           args=(input_path, output_path, input_column_name, output_column_name,
                                                 timesleep_config, maxtokens_config, temperature_config, model_config,
                                                 system_prompt, user_prompt, ex_user_prompt, ex_assistant_prompt,))
@@ -122,6 +121,34 @@ def delete_excel(request):
         os.remove(file_path)
         return JsonResponse('success', safe=False)
     return JsonResponse('error', safe=False)
+
+
+# 上传图片处理的文件，并处理
+def upload_and_process_figure(request):
+    if is_ajax(request):
+        # 处理 Ajax 请求
+        if request.method == 'POST' and request.FILES['file']:
+            # parameters
+            timesleep_config = int(request.POST.get('timesleep_config'))
+            maxtokens_config = int(request.POST.get('maxtokens_config'))
+            temperature_config = float(request.POST.get('temperature_config'))
+            model_config = request.POST.get('model_config')
+            system_prompt = request.POST.get('system_prompt')
+            if system_prompt == '':
+                return JsonResponse({'status': 'error', 'message': 'prompt不能为空'}, safe=False)
+            try:
+                # file
+                uploaded_file = request.FILES['file']
+                fs = FileSystemStorage()
+                file_name = uploaded_file.name
+                filepath = fs.save(os.path.join(FIGURE_ROOT, file_name), uploaded_file)
+                result = gpt.figure_process(filepath, maxtokens_config, model_config, system_prompt)
+                return JsonResponse({'status': 'success', 'data': {'file_name': file_name, 'result': result}},
+                                    safe=False)
+            except Exception as e:
+                traceback.print_exc()
+                return JsonResponse({'status': 'error', 'message': str(e)}, safe=False)
+    return JsonResponse({'status': 'error', 'message': '内部异常'}, safe=False)
 
 
 from openai import OpenAI

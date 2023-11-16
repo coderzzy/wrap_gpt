@@ -24,13 +24,14 @@
     <div class="layui-fluid" style="height: 90vh; overflow-y: scroll;">
       <div class="layui-tab">
         <ul class="layui-tab-title layui-col-md2">
-            <li>单文本</li>
-            <li class="layui-this">批处理</li>
+            <li class="layui-this">单文本文件</li>
+            <li>Excel批处理</li>
+            <li>图片分析</li>
             <li>微调</li>
         </ul>
         <div class="layui-tab-content  layui-col-md10">
             <!-- 单文本 -->
-            <div class="layui-tab-item">
+            <div class="layui-tab-item layui-show">
               <div class="layui-row" style="display: flex;justify-content: center; margin-top: 10px;">
                 <div class="layui-col-md10">
                   <!-- 基础配置 -->
@@ -117,7 +118,7 @@
             </div>
 
             <!-- excel批处理 -->
-            <div class="layui-tab-item layui-show">
+            <div class="layui-tab-item">
               <div class="layui-row" style="display: flex;justify-content: center; margin-top: 10px;">
                 <div class="layui-col-md12">
                   <div class="layui-col-md6 layui-col-md-offset1">
@@ -262,6 +263,105 @@
                 </div>
               </div>
             </div>
+
+            <!-- 图片分析 -->
+            <div class="layui-tab-item">
+                <div class="layui-row" style="display: flex;justify-content: center; margin-top: 10px;">
+                    <div class="layui-col-md10">
+                        <!-- 基础配置 -->
+                        <div class="layui-col-md5">
+                            <div class="layui-panel" style="padding: 10px; font-weight: bolder;">
+                                <p>基础配置</p>
+                            </div>
+                            <div class="layui-panel layui-row" style="padding: 10px;">
+                                <div class="layui-form-item">
+                                    <div class="layui-inline">
+                                        <label class="layui-form-label">模型版本&nbsp;<span style="color:red">*</span></label>
+                                        <div class="layui-inline layui-form" style="width: 200px">
+                                            <select id="figure_model_config">
+                                                <option value="gpt-4-vision-preview" selected>OPENAI-GPT4</option>
+                                                <!--<option value="kdxf-xinghuo3">科大讯飞-星火大模型V3</option>-->
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="layui-collapse">
+                                    <div class="layui-colla-item">
+                                        <h2 class="layui-colla-title">其他设置</h2>
+                                        <div class="layui-colla-content layui-form-item">
+                                            <div class="layui-inline">
+                                                <label class="layui-form-label">间隔时间</label>
+                                                <div class="layui-input-inline" style="width: 200px;">
+                                                    <input id="figure_timesleep_config" type="text" name="" autocomplete="off" class="layui-input" value="3">
+                                                </div>
+                                            </div>
+                                            <div class="layui-inline">
+                                                <label class="layui-form-label">最大字数</label>
+                                                <div class="layui-input-inline" style="width: 200px;">
+                                                    <input id="figure_maxtokens_config" type="text" name="" autocomplete="off" class="layui-input" value="300">
+                                                </div>
+                                            </div>
+                                            <div class="layui-inline">
+                                                <label class="layui-form-label">创新性</label>
+                                                <div class="layui-input-inline" style="width: 200px;">
+                                                    <input id="figure_temperature_config" type="text" name="" autocomplete="off" class="layui-input" value="1">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Prompt配置 -->
+                        <div class="layui-col-md6 layui-col-md-offset1">
+                            <div class="layui-panel" style="padding: 10px; font-weight: bolder;">
+                                <p>Prompt设置</p>
+                            </div>
+                            <div class="layui-panel layui-row" style="padding: 10px;">
+                                <div class="layui-form-item">
+                                    <div class="layui-inline">
+                                        <label class="layui-form-label" style="width: 100px;">系统prompt&nbsp;<span style="color:red">*</span></label>
+                                        <div class="layui-input-inline" style="width: 300px;">
+                                            <textarea id="figure_system_prompt" name="" type='text' placeholder="e.g., 识别图片中这个商品是否有条形码" class="layui-textarea"></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- 文件上传 -->
+                        <div class="layui-col-md5" style="margin-top:10px;">
+                            <div class="layui-panel" style="padding: 10px; font-weight: bolder;">
+                                <p>文件上传 &nbsp;&nbsp;<span style="font-size:12px; color: red">请先填写prompt，再上传文件</span></p>
+                            </div>
+                            <div class="layui-upload-drag" style="display: block;" id="figure-upload-drag">
+                                <i class="layui-icon layui-icon-upload"></i>
+                                <div><p>点击上传，或将文件拖拽到此处</p><p>仅支持.png、.jpg文件</p></div>
+                            </div>
+                        </div>
+                        <div class="layui-col-md6 layui-col-lg-offset1" style="margin-top:10px;">
+                            <div class="layui-panel" style="padding: 10px; font-weight: bolder;">
+                                <p>预览区</p>
+                            </div>
+                            <div class="layui-upload-drag" style="display: block;">
+                                <div id="uploadFigureView">
+                                    <img src="" alt="" style="max-width: 196px">
+                                </div>
+                            </div>
+                        </div>
+                        <!-- 分析结果 -->
+                        <div class="layui-col-md12" style="margin-top: 10px;">
+                            <div class="layui-panel" style="padding: 10px; font-weight: bolder;">
+                                <p>分析结果</p>
+                            </div>
+                            <div class="layui-panel layui-row" style="padding: 10px;">
+                                <textarea id="figure-result" name="" placeholder="waiting..." class="layui-textarea" rows="10"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 微调 -->
             <div class="layui-tab-item">未完待续...</div>
         </div>
       </div>
@@ -386,6 +486,42 @@
             layer.msg('网络异常');
           }
         });
+
+        // figure
+        var figure_uploader = upload.render({
+            elem: '#figure-upload-drag',
+            accept: 'file',
+            url: 'upload_and_process_figure',
+            data: {
+                csrfmiddlewaretoken: "{{ csrf_token}}",
+                // 动态获取值
+                timesleep_config:function(){ return $('#figure_timesleep_config').val()},
+                maxtokens_config:function(){ return $('#figure_maxtokens_config').val()},
+                temperature_config:function(){ return $('#figure_temperature_config').val()},
+                model_config:function(){ return $('#figure_model_config').val()},
+                system_prompt:function(){ return $('#figure_system_prompt').val()}
+            },
+            before: function(obj){
+                obj.preview(function(index, file, result){
+                    $('#uploadFigureView').find('img').attr('src', result); //图片链接（base64）
+                });
+                load = layer.load();
+            },
+            done: function(res){
+                layer.close(load);
+                if (res.status=='error') {
+                    layer.msg(res.message);
+                } else {
+                    $('#figure-result').val('文件名: ' + res.data.file_name + '\r\n分析: \r\n' + res.data.result)
+                    layer.msg('分析完成');
+                }
+            },
+            error: function(res){
+                layer.close(load);
+                layer.msg('网络异常');
+            }
+        });
+
       });
 
       function delete_excel(file_name){
