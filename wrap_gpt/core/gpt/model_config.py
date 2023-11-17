@@ -6,28 +6,6 @@ import wrap_gpt.core.gpt.kdxf.kdxf as kdxf
 import wrap_gpt.core.gpt.openai.openai as openai
 
 
-# 对外: 单次内容输入
-def modelConfig_content(gpt_type, api_key, 
-                        input_text, temperature_config, model_config, system_prompt):
-    print("system_prompt："+system_prompt)
-    if gpt_type == 'wenxin':
-        # 文心一言
-        print('wenxin')
-        response = wenxin.get_response(api_key, input_text, model_config, system_prompt)
-        result = wenxin.get_result(response)
-        print("result："+result)
-        return result
-
-    # openai，默认是openai
-    print('openai')
-    response = openai.get_response(api_key,
-                                   input_text, model_config, temperature_config,
-                                   system_prompt=system_prompt)
-    result = openai.get_result(response)
-    print("result："+result)
-    return result
-
-
 # 对外: 单次内容处理，流式，返回response
 def modelConfig_content_stream_response(gpt_type, api_key,
                         input_text, maxtokens_config, temperature_config, model_config, system_prompt):
@@ -37,7 +15,11 @@ def modelConfig_content_stream_response(gpt_type, api_key,
         print('wenxin')
         response = wenxin.get_response(api_key, input_text, model_config, system_prompt, stream=True)
         return response
-
+    if gpt_type == 'kdxf':
+        # 科大讯飞
+        print('kdxf')
+        response = kdxf.get_response(api_key, input_text, system_prompt)
+        return response
     # openai，默认是openai
     print('openai')
     response = openai.get_response(api_key,
@@ -51,7 +33,9 @@ def modelConfig_content_stream_result(gpt_type, response):
     if gpt_type == 'wenxin':
         # 文心一言
         return wenxin.get_result(response, stream=True)
-
+    if gpt_type == 'kdxf':
+        # 科大讯飞
+        return kdxf.get_result(response)
     # openai，默认是openai
     return openai.get_result(response, stream=True)
 
@@ -60,6 +44,7 @@ def modelConfig_content_stream_result(gpt_type, response):
 def modelConfig_figure(gpt_type, api_key,
                        image_data, model_config, maxtokens_config, system_prompt):
     if gpt_type == 'kdxf':
+        # 科大讯飞
         return kdxf.get_figure_response_and_result(api_key, image_data, system_prompt)
 
     # openai，默认是openai
@@ -99,7 +84,13 @@ def __modelConfig_batch(gpt_type, api_key,
                                        input_text, model_config,
                                        system_prompt, user_prompt, ex_user_prompt, ex_assistant_prompt)
         return wenxin.get_result(response)
-
+    if gpt_type == 'kdxf':
+        # 科大讯飞
+        print('kdxf')
+        response = kdxf.get_response(api_key,
+                                       input_text,
+                                       system_prompt, user_prompt, ex_user_prompt, ex_assistant_prompt)
+        return kdxf.get_result(response)
     # openai，默认是openai
     print('openai')
     response = openai.get_response(api_key,

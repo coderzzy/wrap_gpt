@@ -74,7 +74,6 @@ def on_message(ws, message):
         choices = data["payload"]["choices"]
         status = choices["status"]
         content = choices["text"][0]["content"]
-        print(content)
         global answer
         answer += content
         if status == 2:
@@ -104,10 +103,6 @@ def gen_params(appid, domain, question):
         }
     }
     return data
-
-
-def generateText(role, content):
-    return [{"role": role, "content": content}]
 
 
 def getlength(text):

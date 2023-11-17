@@ -1,4 +1,5 @@
 import os
+import traceback
 import wrap_gpt.core.gpt.model_config as model
 from wrap_gpt.core.gpt.input_process import txt_read, excel_read, word_read, pdf_read
 
@@ -40,11 +41,16 @@ def excel_process(input_path, output_path, column_name, output_column_name,
     print('start')
     # gpt
     gpt_type, api_key = __get_gpt_type(model_config)
-    model.batchProcess(gpt_type, api_key,
-                    input_path, output_path, column_name, output_column_name,
-                    timesleep_config, maxtokens_config, temperature_config, model_config,
-                    system_prompt, user_prompt, ex_user_prompt, ex_assistant_prompt)
-    os.remove(input_path)
+    try:
+        model.batchProcess(gpt_type, api_key,
+                        input_path, output_path, column_name, output_column_name,
+                        timesleep_config, maxtokens_config, temperature_config, model_config,
+                        system_prompt, user_prompt, ex_user_prompt, ex_assistant_prompt)
+        os.remove(input_path)
+    except Exception as e:
+        traceback.print_exc()
+        # 文件改名，以标识异常
+        os.rename(input_path, input_path.replace('unfinished', 'error'))
     print('end')
 
 

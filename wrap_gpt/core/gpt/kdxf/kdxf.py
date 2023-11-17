@@ -5,17 +5,29 @@ import websocket
 from wrap_gpt.core.gpt.kdxf import kdxf_figure_process, kdxf_content_process
 
 
-# TODO: 流式处理，以及socket报错，'socket' object has no attribute 'pending'
-def get_response_and_result(api_key, input_text, system_prompt):
+# 暂时不支持流式，以非流式的方式使用
+def get_response(api_key, input_text,
+                 system_prompt='', user_prompt='', ex_user_prompt='', ex_assistant_prompt='',
+                 stream=False):
     appid = api_key['app_id']
     api_secret = api_key['secret']
     api_key = api_key['key']
     # 准备参数
     kdxf_content_process.answer = ""
     domain = "generalv3"
-    spark_url = "ws://spark-api.xf-yun.com/v3.1/chat"
-    question = kdxf_content_process\
-        .checklen(kdxf_content_process.generateText("user", f'{system_prompt}:{input_text}'))
+    spark_url = "wss://spark-api.xf-yun.com/v3.1/chat"
+    messages=[
+        {"role": "user", "content": f"{system_prompt}"},
+        {"role": "assistant", "content": "好的"}
+    ]
+    if ex_user_prompt != "" and ex_assistant_prompt != "":
+        messages.append({"role": "user", "content": ex_user_prompt})
+        messages.append({"role": "assistant", "content": ex_assistant_prompt})
+    if user_prompt != "":
+        messages.append({"role": "user", "content": f"{user_prompt}：{input_text}"})
+    else:
+        messages.append({"role": "user", "content": repr(input_text)})
+    question = kdxf_content_process.checklen(messages)
     # websocket建立
     websocket.enableTrace(False)
     ws_url = kdxf_content_process.create_url(api_key, api_secret, spark_url)
@@ -28,7 +40,12 @@ def get_response_and_result(api_key, input_text, system_prompt):
     ws.question = question
     ws.domain = domain
     ws.run_forever(sslopt={"cert_reqs": ssl.CERT_NONE})
+    # 等待处理完成，并返回结果
     return kdxf_content_process.answer
+
+
+def get_result(response, stream=False):
+    return response
 
 
 # api_key 为 {app_id:'', api_secret:'', api_key:''}
