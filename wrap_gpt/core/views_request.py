@@ -65,12 +65,16 @@ def stream_content(request):
     file_name = data.get('file_name')
     # process
     input_path = os.path.join(CONTENT_ROOT, file_name)
-    gpt_type, response = gpt.content_stream_response(input_path,
-                             timesleep_config, maxtokens_config, temperature_config, model_config,
-                             system_prompt)
-    response = StreamingHttpResponse(gpt.content_stream_result(gpt_type, response),
-                                     content_type='application/octet-stream')
-    return response
+    try:
+        gpt_type, response = gpt.content_stream_response(input_path,
+                                 timesleep_config, maxtokens_config, temperature_config, model_config,
+                                 system_prompt)
+        response = StreamingHttpResponse(gpt.content_stream_result(gpt_type, response),
+                                         content_type='application/octet-stream')
+        return response
+    except Exception as e:
+        traceback.print_exc()
+        return JsonResponse({'status': 'error', 'message': str(e)}, safe=False)
 
 
 # 上传excel文件，保存本地，并启动线程进行处理
