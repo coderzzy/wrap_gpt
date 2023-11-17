@@ -24,12 +24,58 @@
     <div class="layui-fluid" style="height: 90vh; overflow-y: scroll;">
       <div class="layui-tab">
         <ul class="layui-tab-title layui-col-md2">
+            <li>聊天框</li>
             <li class="layui-this">单文本文件</li>
             <li>Excel批处理</li>
             <li>图片分析</li>
             <li>微调</li>
         </ul>
         <div class="layui-tab-content  layui-col-md10">
+            <!-- 聊天框 -->
+            <div class="layui-tab-item">
+                <div class="layui-row" style="display: flex;justify-content: center; margin-top: 10px;">
+                    <div class="layui-col-md10">
+                        <div class="layui-panel" style="padding: 10px; font-weight: bolder;">
+                            <p>配置</p>
+                        </div>
+                        <div class="layui-panel layui-row" style="padding: 10px;">
+                            <div class="layui-form-item">
+                                <div class="layui-inline">
+                                    <label class="layui-form-label">模型版本&nbsp;<span style="color:red">*</span></label>
+                                    <div class="layui-inline layui-form" style="width: 200px">
+                                        <select id="chat_model_config">
+                                            <option value="gpt-3.5-turbo" selected>OPENAI-GPT3.5</option>
+                                            <option value="ernie-bot">百度-文心一言3.5</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="layui-panel layui-row" style="padding: 10px;">
+                                <div class="layui-form-item">
+                                    <div class="layui-inline">
+                                        <label class="layui-form-label" style="width: 100px;">请输入&nbsp;<span style="color:red">*</span></label>
+                                        <div class="layui-input-inline" style="width: 300px;">
+                                            <textarea id="chat_input" name="" type='text' placeholder="e.g., 写个50字的笑话" class="layui-textarea"></textarea>
+                                        </div>
+                                    </div>
+                                    <button id='chat_submit' type="button" class="layui-btn">提交</button>
+                                </div>
+                            </div>
+                            <div class="layui-panel layui-row" style="padding: 10px;">
+                                <div class="layui-form-item">
+                                    <div class="layui-inline">
+                                        <label class="layui-form-label" style="width: 100px;">结果区&nbsp;<span style="color:red">^.^</span></label>
+                                        <div class="layui-input-inline" style="width: 600px;">
+                                            <textarea id="chat_output" name="" type='text' class="layui-textarea" rows="10"></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <!-- 单文本 -->
             <div class="layui-tab-item layui-show">
               <div class="layui-row" style="display: flex;justify-content: center; margin-top: 10px;">
@@ -375,6 +421,51 @@
         var $ = layui.$;
         var load = null;
         // 渲染
+
+        // chat
+        $('#chat_submit').click(function () {
+            // clear
+            $('#chat_output').val('start...\r\n')
+            fetch('stream_chat', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    csrfmiddlewaretoken: "{{ csrf_token }}",
+                    model_config: $('#chat_model_config').val(),
+                    input_text: $('#chat_input').val()
+                }),
+            }).then(function (response) {
+                // 确保响应状态码正常
+                if (!response.ok) {
+                    console.log(response)
+                    layer.msg('系统异常');
+                } else {
+                    // 使用响应的ReadableStream来处理数据
+                    var reader = response.body.getReader();
+                    function read() {
+                        return reader.read().then(function (result) {
+                            // 处理读取到的数据
+                            if (!result.done) {
+                                var value = result.value;
+                                // 在这里处理接收到的数据，例如更新页面上的内容
+                                var decoder = new TextDecoder('utf-8')
+                                var chunk = decoder.decode(value)
+                                var currentContent = $('#chat_output').val();
+                                $('#chat_output').val(currentContent + chunk);
+                                // 继续读取下一块数据
+                                return read();
+                            }
+                        });
+                    }
+                    return read();
+                }
+            }).catch(function (error) {
+                // 处理错误
+            });
+        });
+
         // content
         var content_uploader = upload.render({
           elem: '#content-upload-drag',

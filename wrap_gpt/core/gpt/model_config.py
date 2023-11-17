@@ -8,7 +8,8 @@ import wrap_gpt.core.gpt.openai.openai as openai
 
 # 对外: 单次内容处理，流式，返回response
 def modelConfig_content_stream_response(gpt_type, api_key,
-                        input_text, maxtokens_config, temperature_config, model_config, system_prompt):
+                                        input_text, model_config, system_prompt,
+                                        maxtokens_config=300, temperature_config=1):
     print("system_prompt："+system_prompt)
     if gpt_type == 'wenxin':
         # 文心一言

@@ -4,6 +4,20 @@ import wrap_gpt.core.gpt.model_config as model
 from wrap_gpt.core.gpt.input_process import txt_read, excel_read, word_read, pdf_read
 
 
+def chat_stream_response(input_text, model_config):
+    print('start')
+    gpt_type, api_key = __get_gpt_type(model_config)
+    response = model.modelConfig_content_stream_response(gpt_type, api_key,
+                                                         input_text, model_config, input_text)
+    print('end')
+    return gpt_type, response
+
+
+def chat_stream_result(gpt_type, response):
+    print('chat_stream_result')
+    return model.modelConfig_content_stream_result(gpt_type, response)
+
+
 # 单文本处理，选择流式方案
 def content_stream_response(input_path,
                     timesleep_config, maxtokens_config, temperature_config, model_config, 
@@ -23,14 +37,15 @@ def content_stream_response(input_path,
     # gpt
     gpt_type, api_key = __get_gpt_type(model_config)
     response = model.modelConfig_content_stream_response(gpt_type, api_key,
-                                 input_text, maxtokens_config, temperature_config, model_config, system_prompt)
+                                                         input_text, model_config, system_prompt,
+                                                         maxtokens_config, temperature_config)
     os.remove(input_path)
     print('end')
     return gpt_type, response
 
 
 def content_stream_result(gpt_type, response):
-    print('stream_result')
+    print('content_stream_result')
     return model.modelConfig_content_stream_result(gpt_type, response)
 
 

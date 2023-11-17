@@ -15,82 +15,12 @@
 </head>
 <body style="background: #F0F0F0;">
     {% include 'head.html' %}
-    <div class="layui-col-md12">
-        <div class="layui-panel layui-row" style="padding: 10px;">
-            <div class="layui-form-item">
-                <div class="layui-inline">
-                    <label class="layui-form-label" style="width: 100px;">请输入&nbsp;<span style="color:red">*</span></label>
-                    <div class="layui-input-inline" style="width: 300px;">
-                        <textarea id="input" name="" type='text' placeholder="e.g., 写个50字的笑话" class="layui-textarea"></textarea>
-                    </div>
-                </div>
-                <button id='submit' type="button" class="layui-btn">提交</button>
-            </div>
-        </div>
-        <div class="layui-panel layui-row" style="padding: 10px;">
-            <div class="layui-form-item">
-                <div class="layui-inline">
-                    <label class="layui-form-label" style="width: 100px;">结果区&nbsp;<span style="color:red">^.^</span></label>
-                    <div class="layui-input-inline" style="width: 800px;">
-                        <textarea id="output" name="" type='text' class="layui-textarea" rows="10"></textarea>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+
 
 <script>
     $(document).ready(function () {
 
-        $('#submit').click(function () {
-            var inputText = $('#input').val();
 
-            // clear
-            $('#output').val('start...\r\n')
-            function displayData(data) {
-                var currentContent = $('#output').val();
-                $('#output').val(currentContent + data);
-            }
-
-            fetch('do_lab', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    csrfmiddlewaretoken: "{{ csrf_token }}",
-                    input: inputText
-                }),
-            }).then(function (response) {
-                // 确保响应状态码正常
-                if (!response.ok) {
-                    throw new Error('Response failed');
-                }
-
-                // 使用响应的ReadableStream来处理数据
-                var reader = response.body.getReader();
-
-                function read() {
-                    return reader.read().then(function (result) {
-                        // 处理读取到的数据
-                        if (!result.done) {
-                            var value = result.value;
-                            // 在这里处理接收到的数据，例如更新页面上的内容
-                            var decoder = new TextDecoder('utf-8')
-                            var chunk = decoder.decode(value)
-                            displayData(chunk)
-
-                            // 继续读取下一块数据
-                            return read();
-                        }
-                    });
-                }
-
-                return read();
-            }).catch(function (error) {
-                // 处理错误
-            });
-        });
     });
 </script>
 </body>

@@ -1,5 +1,6 @@
 # 请求处理能力
 import os
+import json
 import traceback
 import threading
 from django.http import HttpResponse, JsonResponse, StreamingHttpResponse
@@ -11,6 +12,18 @@ import wrap_gpt.core.run_gpt as gpt
 
 def is_ajax(request):
     return request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest'
+
+
+@csrf_exempt
+def stream_chat(request):
+    data = json.loads(request.body)
+    model_config = data.get('model_config')
+    input_text = data.get('input_text')
+    # process
+    gpt_type, response = gpt.chat_stream_response(input_text, model_config)
+    response = StreamingHttpResponse(gpt.chat_stream_result(gpt_type, response),
+                                     content_type='application/octet-stream')
+    return response
 
 
 # 上传单文本处理的文件，并保存本地
@@ -149,33 +162,3 @@ def upload_and_process_figure(request):
                 traceback.print_exc()
                 return JsonResponse({'status': 'error', 'message': str(e)}, safe=False)
     return JsonResponse({'status': 'error', 'message': '内部异常'}, safe=False)
-
-
-from openai import OpenAI
-import json
-# do_lab，忽略 CSRF 校验
-@csrf_exempt
-def do_lab(request):
-    data = json.loads(request.body)
-    user_input = data.get('input')
-    client = OpenAI(
-        # defaults to os.environ.get("OPENAI_API_KEY")
-        api_key=os.environ.get('OPENAI_KEY'),
-    )
-    completion = client.chat.completions.create(
-        model="gpt-3.5-turbo",
-        messages=[
-            {"role": "user", "content": user_input}
-        ],
-        stream=True
-    )
-
-    def get_streaming_content(completion):
-        for chunk in completion:
-            content = chunk.choices[0].delta.content
-            if not content:
-                content = '~'
-            yield content
-
-    response = StreamingHttpResponse(get_streaming_content(completion), content_type='application/octet-stream')
-    return response
