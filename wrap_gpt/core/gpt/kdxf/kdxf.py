@@ -26,7 +26,7 @@ def get_response(api_key, input_text,
     if user_prompt != "":
         messages.append({"role": "user", "content": f"{user_prompt}：{input_text}"})
     else:
-        messages.append({"role": "user", "content": repr(input_text)})
+        messages.append({"role": "user", "content": input_text})
     question = kdxf_content_process.checklen(messages)
     # websocket建立
     websocket.enableTrace(False)
