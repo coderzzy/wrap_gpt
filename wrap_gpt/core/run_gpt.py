@@ -7,6 +7,7 @@ from wrap_gpt.core.gpt.input_process import txt_read, excel_read, word_read, pdf
 def chat_stream_response(input_text, model_config):
     print('start')
     gpt_type, api_key = __get_gpt_type(model_config)
+    print(gpt_type, api_key)
     response = model.modelConfig_content_stream_response(gpt_type, api_key,
                                                          input_text, model_config, input_text)
     print('end')
@@ -89,4 +90,6 @@ def __get_gpt_type(model_config):
                         "secret": os.environ.get('KDXF_SECRET'),
                         "key": os.environ.get('KDXF_KEY')}
     # 默认是openai
-    return "openai", os.environ.get('OPENAI_KEY')
+    if "gpt-4" in model_config:
+        return "openai", os.environ.get('OPENAI_4_KEY')
+    return "openai", os.environ.get('OPENAI_3.5_KEY')
