@@ -32,7 +32,7 @@ def get_response(api_key,
 def get_result(response, stream=False):
     if stream:
         for chunk in response:
-            content = chunk.result
+            content = chunk.result if 'result' in chunk else ""
             yield content
     else:
         return response['result']

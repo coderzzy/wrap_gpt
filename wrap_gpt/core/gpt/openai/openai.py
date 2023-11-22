@@ -25,12 +25,14 @@ def get_response(api_key,
         temperature=temperature_config,  #between 0 and 2， default=1.0 【数值越高，创新+多样性越强，但可能不太保守】
         stream=stream,
     )
+    print(response)
     return response
 
 
 def get_result(response, stream=False):
     if stream:
         for chunk in response:
+            print(chunk)
             content = chunk.choices[0].delta.content
             if not content:
                 content = '~'

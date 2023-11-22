@@ -444,6 +444,7 @@
                 if (!response.ok) {
                     console.log(response)
                     layer.msg('系统异常');
+                    $('#chat_output').val('系统异常');
                 } else {
                     // 使用响应的ReadableStream来处理数据
                     var reader = response.body.getReader();
@@ -512,6 +513,7 @@
                 if (!response.ok) {
                     console.log(response)
                     layer.msg('系统异常');
+                    $('#content-result').val('系统异常');
                 }else{
                     // 使用响应的ReadableStream来处理数据
                     var reader = response.body.getReader();
