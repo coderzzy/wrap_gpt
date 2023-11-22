@@ -111,12 +111,6 @@
                                 </div>
                               </div>
                               <div class="layui-inline">
-                                <label class="layui-form-label">最大字数</label>
-                                <div class="layui-input-inline" style="width: 200px;">
-                                  <input id="content_maxtokens_config" type="text" name="" autocomplete="off" class="layui-input" value="300">
-                                </div>
-                              </div>
-                              <div class="layui-inline">
                                 <label class="layui-form-label">创新性</label>
                                 <div class="layui-input-inline" style="width: 200px;">
                                   <input id="content_temperature_config" type="text" name="" autocomplete="off" class="layui-input" value="1">
@@ -210,12 +204,6 @@
                                   <label class="layui-form-label">间隔时间</label>
                                   <div class="layui-input-inline" style="width: 200px;">
                                     <input id="excel_timesleep_config" type="text" name="" autocomplete="off" class="layui-input" value="3">
-                                  </div>
-                                </div>
-                                <div class="layui-inline">
-                                  <label class="layui-form-label">最大字数</label>
-                                  <div class="layui-input-inline" style="width: 200px;">
-                                    <input id="excel_maxtokens_config" type="text" name="" autocomplete="off" class="layui-input" value="300">
                                   </div>
                                 </div>
                                 <div class="layui-inline">
@@ -347,12 +335,6 @@
                                                 </div>
                                             </div>
                                             <div class="layui-inline">
-                                                <label class="layui-form-label">最大字数</label>
-                                                <div class="layui-input-inline" style="width: 200px;">
-                                                    <input id="figure_maxtokens_config" type="text" name="" autocomplete="off" class="layui-input" value="300">
-                                                </div>
-                                            </div>
-                                            <div class="layui-inline">
                                                 <label class="layui-form-label">创新性</label>
                                                 <div class="layui-input-inline" style="width: 200px;">
                                                     <input id="figure_temperature_config" type="text" name="" autocomplete="off" class="layui-input" value="1">
@@ -479,7 +461,6 @@
             csrfmiddlewaretoken: "{{ csrf_token}}",
             // 动态获取值
             timesleep_config:function(){ return $('#content_timesleep_config').val()},
-            maxtokens_config:function(){ return $('#content_maxtokens_config').val()},
             temperature_config:function(){ return $('#content_temperature_config').val()},
             model_config:function(){ return $('#content_model_config').val()},
             system_prompt:function(){ return $('#content_system_prompt').val()}
@@ -502,7 +483,6 @@
                   },
                   body: JSON.stringify({
                       timesleep_config: $('#content_timesleep_config').val(),
-                      maxtokens_config: $('#content_maxtokens_config').val(),
                       temperature_config: $('#content_temperature_config').val(),
                       model_config: $('#content_model_config').val(),
                       system_prompt: $('#content_system_prompt').val(),
@@ -559,7 +539,6 @@
             input_column_name: function(){ return $('#excel_input_column_name').val()},
             output_column_name:function(){ return $('#excel_output_column_name').val()},
             timesleep_config:function(){ return $('#excel_timesleep_config').val()},
-            maxtokens_config:function(){ return $('#excel_maxtokens_config').val()},
             temperature_config:function(){ return $('#excel_temperature_config').val()},
             model_config:function(){ return $('#excel_model_config').val()},
             system_prompt:function(){ return $('#excel_system_prompt').val()},
@@ -594,7 +573,6 @@
                 csrfmiddlewaretoken: "{{ csrf_token}}",
                 // 动态获取值
                 timesleep_config:function(){ return $('#figure_timesleep_config').val()},
-                maxtokens_config:function(){ return $('#figure_maxtokens_config').val()},
                 temperature_config:function(){ return $('#figure_temperature_config').val()},
                 model_config:function(){ return $('#figure_model_config').val()},
                 system_prompt:function(){ return $('#figure_system_prompt').val()}

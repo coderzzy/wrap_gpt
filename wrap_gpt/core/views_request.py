@@ -33,7 +33,6 @@ def upload_content(request):
         if request.method == 'POST' and request.FILES['file']:
             # parameters
             timesleep_config = int(request.POST.get('timesleep_config'))
-            maxtokens_config = int(request.POST.get('maxtokens_config'))
             temperature_config = float(request.POST.get('temperature_config'))
             model_config = request.POST.get('model_config')
             system_prompt = request.POST.get('system_prompt')
@@ -58,7 +57,6 @@ def upload_content(request):
 def stream_content(request):
     data = json.loads(request.body)
     timesleep_config = int(data.get('timesleep_config'))
-    maxtokens_config = int(data.get('maxtokens_config'))
     temperature_config = float(data.get('temperature_config'))
     model_config = data.get('model_config')
     system_prompt = data.get('system_prompt')
@@ -67,7 +65,7 @@ def stream_content(request):
     input_path = os.path.join(CONTENT_ROOT, file_name)
     try:
         gpt_type, response = gpt.content_stream_response(input_path,
-                                 timesleep_config, maxtokens_config, temperature_config, model_config,
+                                 timesleep_config, temperature_config, model_config,
                                  system_prompt)
         response = StreamingHttpResponse(gpt.content_stream_result(gpt_type, response),
                                          content_type='application/octet-stream')
@@ -86,7 +84,6 @@ def upload_excel(request):
             input_column_name = request.POST.get('input_column_name')
             output_column_name = request.POST.get('output_column_name')
             timesleep_config = int(request.POST.get('timesleep_config'))
-            maxtokens_config = int(request.POST.get('maxtokens_config'))
             temperature_config = float(request.POST.get('temperature_config'))
             model_config = request.POST.get('model_config')
             system_prompt = request.POST.get('system_prompt')
@@ -108,7 +105,7 @@ def upload_excel(request):
                 output_path = os.path.join(EXCEL_ROOT, f'finished_{origin_filename}')
                 thread = threading.Thread(target=gpt.excel_process,
                                           args=(input_path, output_path, input_column_name, output_column_name,
-                                                timesleep_config, maxtokens_config, temperature_config, model_config,
+                                                timesleep_config, temperature_config, model_config,
                                                 system_prompt, user_prompt, ex_user_prompt, ex_assistant_prompt,))
                 thread.start()
                 return JsonResponse({'status': 'success'}, safe=False)
@@ -147,7 +144,6 @@ def upload_and_process_figure(request):
         if request.method == 'POST' and request.FILES['file']:
             # parameters
             timesleep_config = int(request.POST.get('timesleep_config'))
-            maxtokens_config = int(request.POST.get('maxtokens_config'))
             temperature_config = float(request.POST.get('temperature_config'))
             model_config = request.POST.get('model_config')
             system_prompt = request.POST.get('system_prompt')
@@ -159,7 +155,7 @@ def upload_and_process_figure(request):
                 fs = FileSystemStorage()
                 file_name = uploaded_file.name
                 filepath = fs.save(os.path.join(FIGURE_ROOT, file_name), uploaded_file)
-                result = gpt.figure_process(filepath, maxtokens_config, model_config, system_prompt)
+                result = gpt.figure_process(filepath, model_config, system_prompt)
                 return JsonResponse({'status': 'success', 'data': {'file_name': file_name, 'result': result}},
                                     safe=False)
             except Exception as e:

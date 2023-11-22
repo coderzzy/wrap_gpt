@@ -3,7 +3,7 @@ from openai import OpenAI
 import requests
 
 def get_response(api_key,
-                 input_text, model_config, temperature_config, maxtokens_config=3000,
+                 input_text, model_config, temperature_config,
                  system_prompt='', user_prompt='', ex_user_prompt='', ex_assistant_prompt='',
                  stream=False):
     client = OpenAI(
@@ -21,7 +21,6 @@ def get_response(api_key,
     response = client.chat.completions.create(
         model=model_config,
         messages=messages,
-        max_tokens=maxtokens_config,
         temperature=temperature_config,  #between 0 and 2， default=1.0 【数值越高，创新+多样性越强，但可能不太保守】
         stream=stream,
     )
@@ -40,7 +39,7 @@ def get_result(response, stream=False):
 
 
 def get_figure_response_and_result(api_key, base64_image,
-                                   model_config, maxtokens_config,
+                                   model_config,
                                    system_prompt):
     headers = {
         "Content-Type": "application/json",
@@ -65,7 +64,6 @@ def get_figure_response_and_result(api_key, base64_image,
                 ]
             }
         ],
-        "max_tokens": maxtokens_config
     }
     response = requests.post("https://api.openai.com/v1/chat/completions", headers=headers, json=payload)
     result = response.json()

@@ -9,7 +9,7 @@ import wrap_gpt.core.gpt.openai.openai as openai
 # 对外: 单次内容处理，流式，返回response
 def modelConfig_content_stream_response(gpt_type, api_key,
                                         input_text, model_config, system_prompt,
-                                        maxtokens_config=300, temperature_config=1):
+                                        temperature_config=1):
     print("system_prompt："+system_prompt)
     if gpt_type == 'wenxin':
         # 文心一言
@@ -24,7 +24,7 @@ def modelConfig_content_stream_response(gpt_type, api_key,
     # openai，默认是openai
     print('openai')
     response = openai.get_response(api_key,
-                                   input_text, model_config, temperature_config, maxtokens_config,
+                                   input_text, model_config, temperature_config,
                                    system_prompt, stream=True)
     return response
 
@@ -43,21 +43,21 @@ def modelConfig_content_stream_result(gpt_type, response):
 
 # 图片处理
 def modelConfig_figure(gpt_type, api_key,
-                       image_data, model_config, maxtokens_config, system_prompt):
+                       image_data, model_config, system_prompt):
     if gpt_type == 'kdxf':
         # 科大讯飞
         return kdxf.get_figure_response_and_result(api_key, image_data, system_prompt)
 
     # openai，默认是openai
     base64_image = base64.b64encode(image_data).decode('utf-8')
-    return openai.get_figure_response_and_result(api_key, base64_image, model_config, maxtokens_config,
+    return openai.get_figure_response_and_result(api_key, base64_image, model_config,
                                                  system_prompt)
 
 
 # 对外: 批量处理
 def batchProcess(gpt_type, api_key,
                  input_path, output_path, column_name, output_column_name,
-                 timesleep_config, maxtokens_config, temperature_config, model_config,
+                 timesleep_config, temperature_config, model_config,
                  system_prompt, user_prompt, ex_user_prompt, ex_assistant_prompt):
     df = pd.read_excel(input_path)
     # 循环遍历每一行并调用GPT-3.5 API处理
@@ -65,7 +65,7 @@ def batchProcess(gpt_type, api_key,
     for index, row in df.iterrows():
         input_text = row[column_name]  # 从指定列获取文本
         generated_text = __modelConfig_batch(gpt_type, api_key,
-                                           input_text, maxtokens_config, temperature_config, model_config,
+                                           input_text, temperature_config, model_config,
                                            system_prompt, user_prompt, ex_user_prompt, ex_assistant_prompt)
         generated_texts.append(generated_text)
         print("Process "+str(index+1)+": "+generated_text)
@@ -76,7 +76,7 @@ def batchProcess(gpt_type, api_key,
 
 # 对内: 批处理excel2excel
 def __modelConfig_batch(gpt_type, api_key,
-                   input_text, maxtokens_config, temperature_config,model_config,
+                   input_text, temperature_config,model_config,
                    system_prompt, user_prompt, ex_user_prompt, ex_assistant_prompt):
     if gpt_type == 'wenxin':
         # 文心一言
@@ -95,7 +95,7 @@ def __modelConfig_batch(gpt_type, api_key,
     # openai，默认是openai
     print('openai')
     response = openai.get_response(api_key,
-                                   input_text, model_config, temperature_config, maxtokens_config,
+                                   input_text, model_config, temperature_config,
                                    system_prompt, user_prompt, ex_user_prompt, ex_assistant_prompt)
     result = openai.get_result(response)
     return result

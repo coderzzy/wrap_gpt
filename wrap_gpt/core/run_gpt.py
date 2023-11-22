@@ -21,7 +21,7 @@ def chat_stream_result(gpt_type, response):
 
 # 单文本处理，选择流式方案
 def content_stream_response(input_path,
-                    timesleep_config, maxtokens_config, temperature_config, model_config, 
+                    timesleep_config, temperature_config, model_config,
                     system_prompt):
     print('start')
     # 内容读取
@@ -39,7 +39,7 @@ def content_stream_response(input_path,
     gpt_type, api_key = __get_gpt_type(model_config)
     response = model.modelConfig_content_stream_response(gpt_type, api_key,
                                                          input_text, model_config, system_prompt,
-                                                         maxtokens_config, temperature_config)
+                                                         temperature_config)
     os.remove(input_path)
     print('end')
     return gpt_type, response
@@ -52,7 +52,7 @@ def content_stream_result(gpt_type, response):
 
 # excel批处理，非流式方案
 def excel_process(input_path, output_path, column_name, output_column_name,
-                     timesleep_config, maxtokens_config, temperature_config, model_config,
+                     timesleep_config, temperature_config, model_config,
                      system_prompt, user_prompt, ex_user_prompt, ex_assistant_prompt):
     print('start')
     # gpt
@@ -60,7 +60,7 @@ def excel_process(input_path, output_path, column_name, output_column_name,
     try:
         model.batchProcess(gpt_type, api_key,
                         input_path, output_path, column_name, output_column_name,
-                        timesleep_config, maxtokens_config, temperature_config, model_config,
+                        timesleep_config, temperature_config, model_config,
                         system_prompt, user_prompt, ex_user_prompt, ex_assistant_prompt)
         os.remove(input_path)
     except Exception as e:
@@ -78,7 +78,7 @@ def figure_process(input_path, maxtokens_config, model_config, system_prompt):
     gpt_type, api_key = __get_gpt_type(model_config)
     os.remove(input_path)
     return model.modelConfig_figure(gpt_type, api_key,
-                       image_data, model_config, maxtokens_config, system_prompt)
+                       image_data, model_config, system_prompt)
 
 
 # return: gpt_type, api_key
