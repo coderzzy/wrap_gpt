@@ -36,6 +36,7 @@ def content_stream_response(input_path,
     elif file_type == "pdf":
         input_text = pdf_read(input_path)
     # gpt
+    print(input_text)
     gpt_type, api_key = __get_gpt_type(model_config)
     response = model.modelConfig_content_stream_response(gpt_type, api_key,
                                                          input_text, model_config, system_prompt,
