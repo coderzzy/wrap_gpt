@@ -6,6 +6,7 @@ def get_response(api_key,
                  input_text, model_config, temperature_config, maxtokens_config=3000,
                  system_prompt='', user_prompt='', ex_user_prompt='', ex_assistant_prompt='',
                  stream=False):
+    print(input_text)
     client = OpenAI(
         # defaults to os.environ.get("OPENAI_API_KEY")
         api_key=api_key,
@@ -25,14 +26,12 @@ def get_response(api_key,
         temperature=temperature_config,  #between 0 and 2， default=1.0 【数值越高，创新+多样性越强，但可能不太保守】
         stream=stream,
     )
-    print(response)
     return response
 
 
 def get_result(response, stream=False):
     if stream:
         for chunk in response:
-            print(chunk)
             content = chunk.choices[0].delta.content
             if not content:
                 content = '~'
