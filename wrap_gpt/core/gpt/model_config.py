@@ -42,16 +42,27 @@ def modelConfig_content_stream_result(gpt_type, response):
 
 
 # 图片处理
-def modelConfig_figure(gpt_type, api_key,
+def modelConfig_figure_stream_response(gpt_type, api_key,
                        image_data, model_config, system_prompt):
     if gpt_type == 'kdxf':
         # 科大讯飞
-        return kdxf.get_figure_response_and_result(api_key, image_data, system_prompt)
+        print('kdxf')
+        return kdxf.get_figure_response(api_key, image_data, system_prompt)
 
     # openai，默认是openai
+    print('openai')
     base64_image = base64.b64encode(image_data).decode('utf-8')
-    return openai.get_figure_response_and_result(api_key, base64_image, model_config,
-                                                 system_prompt)
+    return openai.get_figure_response(api_key, base64_image, model_config,
+                                                 system_prompt, stream=True)
+
+
+def modelConfig_figure_stream_result(gpt_type, response):
+    if gpt_type == 'kdxf':
+        # 科大讯飞
+        return kdxf.get_result(response)
+
+    # openai，默认是openai
+    return openai.get_result(response, stream=True)
 
 
 # 对外: 批量处理

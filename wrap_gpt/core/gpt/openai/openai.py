@@ -35,40 +35,29 @@ def get_result(response, stream=False):
                 content = '~'
             yield content
     else:
+        if 'error' in response:
+            return response['error']['message']
         return response['choices'][0]['message']['content']
 
 
-def get_figure_response_and_result(api_key, base64_image,
+def get_figure_response(api_key, base64_image,
                                    model_config,
-                                   system_prompt):
-    print(system_prompt)
-    headers = {
-        "Content-Type": "application/json",
-        "Authorization": f"Bearer {api_key}"
-    }
-    payload = {
-        "model": model_config,
-        "messages": [
-            {
-                "role": "user",
-                "content": [
-                    {
-                        "type": "text",
-                        "text": system_prompt
-                    },
-                    {
-                        "type": "image_url",
-                        "image_url": {
-                            "url": f"data:image/jpeg;base64,{base64_image}"
-                        }
-                    }
-                ]
-            }
-        ],
-    }
-    response = requests.post("https://api.openai.com/v1/chat/completions", headers=headers, json=payload)
-    result = response.json()
-    print(result)
-    if 'error' in result:
-        return result['error']['message']
-    return result['choices'][0]['message']['content']
+                                   system_prompt, stream=False):
+    client = OpenAI(
+        api_key=api_key,
+    )
+    messages = [
+        {
+            "role": "user",
+            "content":[
+                {"type": "text", "text": system_prompt},
+                {"type": "image_url", "image_url": {"url": f"data:image/jpeg;base64,{base64_image}"}}
+            ]
+        }
+    ]
+    response = client.chat.completions.create(
+        model=model_config,
+        messages=messages,
+        stream=stream,
+    )
+    return response

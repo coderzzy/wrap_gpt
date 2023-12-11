@@ -3,7 +3,7 @@ from django.urls import path, include
 from wrap_gpt.core.views import index, console, case, lab
 from wrap_gpt.core.views_request import stream_chat, upload_content, stream_content, \
     upload_excel, download_excel, delete_excel, \
-    upload_and_process_figure
+    upload_figure, stream_figure
 
 
 urlpatterns = [
@@ -21,5 +21,7 @@ urlpatterns = [
     path('upload_excel', upload_excel, name='upload_excel'),
     path('download/<str:file_name>/', download_excel, name='download_excel'),
     path('delete_excel', delete_excel, name='delete_excel'),
-    path('upload_and_process_figure', upload_and_process_figure, name='upload_and_process_figure'),
+    path('upload_figure', upload_figure, name='upload_figure'),
+    path('stream_figure', stream_figure, name='stream_figure'),
+
 ]

@@ -68,15 +68,16 @@ def run(ws, *args):
 def on_message(ws, message):
     data = json.loads(message)
     code = data['header']['code']
+    global answer
     if code != 0:
         print(f'请求错误: {code}, {data}')
+        answer = data
         ws.close()
     else:
         choices = data["payload"]["choices"]
         status = choices["status"]
         content = choices["text"][0]["content"]
         # print(content)
-        global answer
         answer += content
         if status == 2:
             ws.close()

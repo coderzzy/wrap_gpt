@@ -137,8 +137,8 @@ def delete_excel(request):
     return JsonResponse('error', safe=False)
 
 
-# 上传图片处理的文件，并处理
-def upload_and_process_figure(request):
+# 上传和暂存图片处理的文件
+def upload_figure(request):
     if is_ajax(request):
         # 处理 Ajax 请求
         if request.method == 'POST' and request.FILES['file']:
@@ -155,10 +155,30 @@ def upload_and_process_figure(request):
                 fs = FileSystemStorage()
                 file_name = uploaded_file.name
                 filepath = fs.save(os.path.join(FIGURE_ROOT, file_name), uploaded_file)
-                result = gpt.figure_process(filepath, model_config, system_prompt)
-                return JsonResponse({'status': 'success', 'data': {'file_name': file_name, 'result': result}},
+                return JsonResponse({'status': 'success', 'data': {'file_name': file_name}},
                                     safe=False)
             except Exception as e:
                 traceback.print_exc()
                 return JsonResponse({'status': 'error', 'message': str(e)}, safe=False)
     return JsonResponse({'status': 'error', 'message': '内部异常'}, safe=False)
+
+
+# 流式处理图片的内容
+@csrf_exempt
+def stream_figure(request):
+    data = json.loads(request.body)
+    timesleep_config = int(data.get('timesleep_config'))
+    temperature_config = float(data.get('temperature_config'))
+    model_config = data.get('model_config')
+    system_prompt = data.get('system_prompt')
+    file_name = data.get('file_name')
+    # process
+    input_path = os.path.join(FIGURE_ROOT, file_name)
+    try:
+        gpt_type, response = gpt.figure_stream_response(input_path, model_config, system_prompt)
+        response = StreamingHttpResponse(gpt.figure_stream_result(gpt_type, response),
+                                         content_type='application/octet-stream')
+        return response
+    except Exception as e:
+        traceback.print_exc()
+        return JsonResponse({'status': 'error', 'message': str(e)}, safe=False)

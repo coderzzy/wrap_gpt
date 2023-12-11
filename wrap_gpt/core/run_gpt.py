@@ -70,15 +70,23 @@ def excel_process(input_path, output_path, column_name, output_column_name,
     print('end')
 
 
-# 图片处理，非流式方案
-def figure_process(input_path, model_config, system_prompt):
+# 图片处理，流式方案
+def figure_stream_response(input_path, model_config, system_prompt):
+    print('start')
     image_data = None
     with open(input_path, "rb") as image_file:
         image_data = image_file.read()
     gpt_type, api_key = __get_gpt_type(model_config)
     os.remove(input_path)
-    return model.modelConfig_figure(gpt_type, api_key,
-                       image_data, model_config, system_prompt)
+    response = model.modelConfig_figure_stream_response(gpt_type, api_key,
+                                                        image_data, model_config, system_prompt)
+    print('end')
+    return gpt_type, response
+
+
+def figure_stream_result(gpt_type, response):
+    print('figure_stream_result')
+    return model.modelConfig_figure_stream_result(gpt_type, response)
 
 
 # return: gpt_type, api_key

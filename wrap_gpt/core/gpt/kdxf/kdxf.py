@@ -45,11 +45,13 @@ def get_response(api_key, input_text,
 
 
 def get_result(response, stream=False):
+    if 'header' in response:
+        return response['header']['message']
     return response
 
 
 # api_key 为 {app_id:'', api_secret:'', api_key:''}
-def get_figure_response_and_result(api_key, image_data, system_prompt):
+def get_figure_response(api_key, image_data, system_prompt, stream=False):
     appid = api_key['app_id']
     api_secret = api_key['secret']
     api_key = api_key['key']
@@ -70,5 +72,5 @@ def get_figure_response_and_result(api_key, image_data, system_prompt):
     ws.imagedata = image_data
     ws.question = question
     ws.run_forever(sslopt={"cert_reqs": ssl.CERT_NONE})
-    # 返回结果
+    # 等待处理完成，并返回结果
     return kdxf_figure_process.answer

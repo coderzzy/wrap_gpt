@@ -568,7 +568,7 @@
         var figure_uploader = upload.render({
             elem: '#figure-upload-drag',
             accept: 'file',
-            url: 'upload_and_process_figure',
+            url: 'upload_figure',
             data: {
                 csrfmiddlewaretoken: "{{ csrf_token}}",
                 // 动态获取值
@@ -588,8 +588,54 @@
                 if (res.status=='error') {
                     layer.msg(res.message);
                 } else {
-                    $('#figure-result').val('文件名: ' + res.data.file_name + '\r\n分析: \r\n' + res.data.result)
-                    layer.msg('分析完成');
+                    layer.msg('上传成功，开始分析');
+                    // 上传完成后，开始流式处理
+                    $('#figure-result').val('文件名: '+ res.data.file_name + '\r\n分析: \r\n')
+                    fetch('stream_figure', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            timesleep_config: $('#figure_timesleep_config').val(),
+                            temperature_config: $('#figure_temperature_config').val(),
+                            model_config: $('#figure_model_config').val(),
+                            system_prompt: $('#figure_system_prompt').val(),
+                            file_name: res.data.file_name
+                        }),
+                    }).then(function (response) {
+                        // 确保响应状态码正常
+                        if (!response.ok) {
+                            console.log(response)
+                            layer.msg('系统异常');
+                            $('#figure-result').val('系统异常');
+                        }else{
+                            // 使用响应的ReadableStream来处理数据
+                            var reader = response.body.getReader();
+                            function read() {
+                                return reader.read().then(function (result) {
+                                    // 处理读取到的数据
+                                    if (!result.done) {
+                                        var value = result.value;
+                                        // 在这里处理接收到的数据，例如更新页面上的内容
+                                        var decoder = new TextDecoder('utf-8')
+                                        var chunk = decoder.decode(value)
+                                        // 页面显示
+                                        var currentContent = $('#figure-result').val();
+                                        $('#figure-result').val(currentContent + chunk);
+                                        // 继续读取下一块数据
+                                        return read();
+                                    }
+                                    layer.msg('处理完成!')
+                                });
+                            }
+                            return read();
+                        }
+
+                    }).catch(function (error) {
+                        // 处理错误
+                        console.log(error)
+                    });
                 }
             },
             error: function(res){
