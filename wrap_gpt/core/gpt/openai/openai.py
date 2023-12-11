@@ -67,6 +67,7 @@ def get_figure_response_and_result(api_key, base64_image,
     }
     response = requests.post("https://api.openai.com/v1/chat/completions", headers=headers, json=payload)
     result = response.json()
+    print(result)
     if 'error' in result:
         return result['error']['message']
     return result['choices'][0]['message']['content']
