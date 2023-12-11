@@ -71,7 +71,7 @@ def excel_process(input_path, output_path, column_name, output_column_name,
 
 
 # 图片处理，非流式方案
-def figure_process(input_path, maxtokens_config, model_config, system_prompt):
+def figure_process(input_path, model_config, system_prompt):
     image_data = None
     with open(input_path, "rb") as image_file:
         image_data = image_file.read()
