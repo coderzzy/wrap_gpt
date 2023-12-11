@@ -59,5 +59,6 @@ def get_figure_response(api_key, base64_image,
         model=model_config,
         messages=messages,
         stream=stream,
+        max_tokens=300,
     )
     return response
