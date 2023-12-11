@@ -41,6 +41,7 @@ def get_result(response, stream=False):
 def get_figure_response_and_result(api_key, base64_image,
                                    model_config,
                                    system_prompt):
+    print(system_prompt)
     headers = {
         "Content-Type": "application/json",
         "Authorization": f"Bearer {api_key}"
