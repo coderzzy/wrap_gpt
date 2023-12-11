@@ -59,6 +59,6 @@ def get_figure_response(api_key, base64_image,
         model=model_config,
         messages=messages,
         stream=stream,
-        max_tokens=300,
+        max_tokens=500,  # 未知原因，openai的图片处理，默认token值很小
     )
     return response
