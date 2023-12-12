@@ -1,7 +1,7 @@
 import os
 import traceback
-import wrap_gpt.core.gpt.model_config as model
-from wrap_gpt.core.gpt.input_process import txt_read, excel_read, word_read, pdf_read
+import work_assist.core.gpt.model_config as model
+from work_assist.core.gpt.input_process import txt_read, excel_read, word_read, pdf_read
 
 
 def chat_stream_response(input_text, model_config):

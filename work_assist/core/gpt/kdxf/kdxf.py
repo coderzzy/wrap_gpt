@@ -2,7 +2,7 @@
 import base64
 import ssl
 import websocket
-from wrap_gpt.core.gpt.kdxf import kdxf_figure_process, kdxf_content_process
+from work_assist.core.gpt.kdxf import kdxf_figure_process, kdxf_content_process
 
 
 # 暂时不支持流式，以非流式的方式使用

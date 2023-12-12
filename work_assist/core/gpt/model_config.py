@@ -1,9 +1,9 @@
 import time
 import base64
 import pandas as pd
-import wrap_gpt.core.gpt.wenxin.wenxin as wenxin
-import wrap_gpt.core.gpt.kdxf.kdxf as kdxf
-import wrap_gpt.core.gpt.openai.openai as openai
+import work_assist.core.gpt.wenxin.wenxin as wenxin
+import work_assist.core.gpt.kdxf.kdxf as kdxf
+import work_assist.core.gpt.openai.openai as openai
 
 
 # 对外: 单次内容处理，流式，返回response

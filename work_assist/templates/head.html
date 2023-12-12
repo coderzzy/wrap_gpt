@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html>
+<head>
+</head>
+<body>
+
+<!--导航栏-->
+<div class="layui-row layui-panel" style="background-color: rgba(17,17,17,1);">
+    <div class="layui-col-md2" style="margin-top: 5px; padding: 10px; text-align: center;">
+        <a href="{% url 'index' %}" style="color: white; font-weight: bolder; font-size: x-large;">GPT-职场小助手</a>
+    </div>
+    <ul class="layui-nav layui-col-md5" lay-filter="" style="background-color: rgba(17,17,17,0.75);">
+        <li class="layui-nav-item"><a href="{% url 'index' %}">首页</a></li>
+        <li class="layui-nav-item"><a href="{% url 'console' %}">工作台</a></li>
+        <li class="layui-nav-item"><a href="#">小游戏</a></li>
+        <li class="layui-nav-item"><a href="#">未完待续</a></li>
+        <li class="layui-nav-item"><a href="{% url 'lab' %}">实验功能</a></li>
+    </ul>
+    <ul class="layui-nav layui-col-md3" style="background-color: rgba(17,17,17,0.75);">
+        <li class="layui-nav-item"><a href="{% url 'case' %}">教程 & 案例</a></li>
+        <li class="layui-nav-item" style="background-color: rgba(17,17,17,0.75);">
+            <a><img src="static/image/avatar.jpg" class="layui-nav-img" style="background-color: rgba(17,17,17,0.75);">TEST</a>
+            <dl class="layui-nav-child">
+                <dd style="color: white; text-align: center; background: orange">硬币：0</dd>
+                <dd><a href="#">个人中心</a></dd>
+                <dd><a href="#">未完待续</a></dd>
+                <dd><a href="#">退出登录</a></dd>
+            </dl>
+        </li>
+    </ul>
+    <div class="layui-nav layui-col-md2" 
+    style="background-color: rgba(17,17,17,1); display: flex;align-items: center; margin-top: 5px; padding: 10px;">
+        <button class="layui-btn layui-btn-sm" lay-event="register">注册</button>
+        <button class="layui-btn layui-btn-sm layui-btn-danger" lay-event="login">登录</button>
+    </div>
+</div>
+
+</body>
+<script type="text/javascript">
+    //注意：导航 依赖 element 模块，否则无法进行功能性操作
+    layui.use(['util', 'layer','form'], function(){
+        var $ = layui.$
+            ,form = layui.form
+            ,layer = layui.layer
+            ,util = layui.util;
+
+        util.event('lay-event',{
+            // 注册和登录
+            login : function (){
+                layer.open({
+                    type: 1,
+                    area: '350px',
+                    resize: false,
+                    shadeClose: true,
+                    title: '',
+                    content: `
+          <div class="layui-form" lay-filter="filter-test-layer" style="margin: 16px;">
+            <div class="demo-login-container">
+              <div class="layui-form-item">
+                <div class="layui-input-wrap">
+                  <div class="layui-input-prefix">
+                    <i class="layui-icon layui-icon-username"></i>
+                  </div>
+                  <input type="text" name="username" value="" lay-verify="required" placeholder="用户名" lay-reqtext="请填写用户名" autocomplete="off" class="layui-input" lay-affix="clear">
+                </div>
+              </div>
+              <div class="layui-form-item">
+                <div class="layui-input-wrap">
+                  <div class="layui-input-prefix">
+                    <i class="layui-icon layui-icon-password"></i>
+                  </div>
+                  <input type="password" name="password" value="" lay-verify="required" placeholder="密   码" lay-reqtext="请填写密码" autocomplete="off" class="layui-input" lay-affix="eye">
+                </div>
+              </div>
+{#              <div class="layui-form-item">#}
+{#                <div class="layui-row">#}
+{#                  <div class="layui-col-xs7">#}
+{#                    <div class="layui-input-wrap">#}
+{#                      <div class="layui-input-prefix">#}
+{#                        <i class="layui-icon layui-icon-vercode"></i>#}
+{#                      </div>#}
+{#                      <input type="text" name="captcha" value="" lay-verify="required" placeholder="验证码" lay-reqtext="请填写验证码" autocomplete="off" class="layui-input" lay-affix="clear">#}
+{#                    </div>#}
+{#                  </div>#}
+{#                  <div class="layui-col-xs5">#}
+{#                    <div style="margin-left: 10px;">#}
+{#                      <img src="https://www.oschina.net/action/user/captcha" onclick="this.src='https://www.oschina.net/action/user/captcha?t='+ new Date().getTime();">#}
+{#                    </div>#}
+{#                  </div>#}
+{#                </div>#}
+{#              </div>#}
+              <div class="layui-form-item">
+                <button class="layui-btn layui-btn-fluid" lay-submit lay-filter="form-login">登录</button>
+              </div>
+            </div>
+          </div>
+        `,
+                    success: function(){
+                        // 对弹层中的表单进行初始化渲染
+                        form.render();
+                        // 表单提交事件
+                        form.on('submit(form-login)', function(data){
+                            var field = data.field; // 获取表单字段值
+                            // 显示填写结果，仅作演示用
+                            layer.alert(JSON.stringify(field), {
+                                title: '当前填写的字段值'
+                            });
+                            // 此处可执行 Ajax 等操作
+                            // …
+                            return false; // 阻止默认 form 跳转
+                        });
+                    }
+                });
+            },
+            register: function (){
+                layer.open({
+                    type: 1,
+                    area: '350px',
+                    resize: false,
+                    shadeClose: true,
+                    title: '',
+                    content: `
+          <div class="layui-form" lay-filter="filter-test-layer" style="margin: 16px;">
+            <div class="demo-login-container">
+              <div class="layui-form-item">
+                <div class="layui-input-wrap">
+                  <div class="layui-input-prefix">
+                    <i class="layui-icon layui-icon-username"></i>
+                  </div>
+                  <input type="text" name="username" value="" lay-verify="required" placeholder="用户名" lay-reqtext="请填写用户名" autocomplete="off" class="layui-input" lay-affix="clear">
+                </div>
+              </div>
+              <div class="layui-form-item">
+                <div class="layui-input-wrap">
+                  <div class="layui-input-prefix">
+                    <i class="layui-icon layui-icon-password"></i>
+                  </div>
+                  <input type="password" name="password" value="" lay-verify="required" placeholder="密   码" lay-reqtext="请填写密码" autocomplete="off" class="layui-input" lay-affix="eye">
+                </div>
+              </div>
+{#              <div class="layui-form-item">#}
+{#                <div class="layui-row">#}
+{#                  <div class="layui-col-xs7">#}
+{#                    <div class="layui-input-wrap">#}
+{#                      <div class="layui-input-prefix">#}
+{#                        <i class="layui-icon layui-icon-vercode"></i>#}
+{#                      </div>#}
+{#                      <input type="text" name="captcha" value="" lay-verify="required" placeholder="验证码" lay-reqtext="请填写验证码" autocomplete="off" class="layui-input" lay-affix="clear">#}
+{#                    </div>#}
+{#                  </div>#}
+{#                  <div class="layui-col-xs5">#}
+{#                    <div style="margin-left: 10px;">#}
+{#                      <img src="https://www.oschina.net/action/user/captcha" onclick="this.src='https://www.oschina.net/action/user/captcha?t='+ new Date().getTime();">#}
+{#                    </div>#}
+{#                  </div>#}
+{#                </div>#}
+{#              </div>#}
+              <div class="layui-form-item">
+                <button class="layui-btn layui-btn-fluid" lay-submit lay-filter="form-register">注册</button>
+              </div>
+            </div>
+          </div>
+        `,
+                    success: function(){
+                        // 对弹层中的表单进行初始化渲染
+                        form.render();
+                        // 表单提交事件
+                        form.on('submit(form-register)', function(data){
+                            var field = data.field; // 获取表单字段值
+                            // 显示填写结果，仅作演示用
+                            layer.alert(JSON.stringify(field), {
+                                title: '当前填写的字段值'
+                            });
+                            // 此处可执行 Ajax 等操作
+                            // …
+                            return false; // 阻止默认 form 跳转
+                        });
+                    }
+                });
+            }
+        })
+    });
+</script>
+</html>

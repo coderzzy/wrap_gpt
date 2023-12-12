@@ -6,8 +6,8 @@ import threading
 from django.http import HttpResponse, JsonResponse, StreamingHttpResponse
 from django.core.files.storage import FileSystemStorage
 from django.views.decorators.csrf import csrf_exempt
-from wrap_gpt.core.constants import CONTENT_ROOT, EXCEL_ROOT, FIGURE_ROOT
-import wrap_gpt.core.run_gpt as gpt
+from work_assist.core.constants import CONTENT_ROOT, EXCEL_ROOT, FIGURE_ROOT
+import work_assist.core.run_gpt as gpt
 
 
 def is_ajax(request):

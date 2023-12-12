@@ -21,3 +21,9 @@ django-admin --version
 ```python
 python manage.py OPENAI_KEY:xxxx,WENXIN_TOKEN:xxxx[,...] runserver 0.0.0.0:8000
 ```
+
+
+## 程序管理后台
+```python
+python manage.py createsuperuser
+```

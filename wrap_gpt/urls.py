@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.urls import path, include
-from wrap_gpt.core.views import index, console, case, lab
-from wrap_gpt.core.views_request import stream_chat, upload_content, stream_content, \
+from work_assist.views import index, console, case, lab
+from work_assist.views_request import stream_chat, upload_content, stream_content, \
     upload_excel, download_excel, delete_excel, \
     upload_figure, stream_figure
 

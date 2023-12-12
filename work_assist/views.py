@@ -1,7 +1,7 @@
 # 路由能力
 from django.shortcuts import render
 import os
-from wrap_gpt.core.constants import EXCEL_ROOT
+from work_assist.core.constants import EXCEL_ROOT
 
 
 def head(request):

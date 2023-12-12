@@ -1,6 +1,6 @@
 # https://pypi.org/project/openai/1.2.4/
 from openai import OpenAI
-import requests
+
 
 def get_response(api_key,
                  input_text, model_config, temperature_config,
