@@ -164,7 +164,7 @@
             <div class="layui-tab-item">
               <div class="layui-row" style="display: flex;justify-content: center; margin-top: 10px;">
                 <div class="layui-col-md12">
-                  <div class="layui-col-md6 layui-col-md-offset1">
+                  <div class="layui-col-md5 layui-col-md-offset1">
                     <!-- 基础配置 -->
                     <div class="layui-col-md12">
                       <div class="layui-panel" style="padding: 10px; font-weight: bolder;">
@@ -259,7 +259,7 @@
                       </div>
                     </div>
                   </div>
-                  <div class="layui-col-md4" style="margin-left: 10px;">
+                  <div class="layui-col-md5" style="margin-left: 10px;">
                     <!-- 文件上传 -->
                     <div class="layui-col-md12">
                       <div class="layui-panel" style="padding: 10px; font-weight: bolder;">
@@ -281,18 +281,22 @@
                               <tr>
                                 <th>文件</th>
                                 <th>状态</th>
+                                <th>进度</th>
                                 <th>操作</th>
-                              </tr> 
+                              </tr>
                             </thead>
                             {% for file in uploaded_excels %}
                                 <tbody>
-                                    <td>{{ file.1 }}</td>
-                                    <td>{{ file.2 }}</td>
-                                    {% if file.2 == 'unfinished' %}
-                                        <td><a href="#" onclick="delete_excel('{{file.0}}')">删除</a></td>
+                                    <td>{{ file.name }}</td>
+                                    <td>{{ file.status }}</td>
+                                    <td>{{ file.processed_line}} / {{file.total_line }}</td>
+                                    {% if file.status == 'success' %}
+                                        <td><a href="{% url 'download_excel' file.name %}">下载</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="#" onclick="delete_excel('{{file.name}}')">删除</a></td>
+                                    {% elif file.status == 'error'%}
+                                        <td><a href="#" onclick="delete_excel('{{file.name}}')">删除</a></td>
                                     {% else %}
-                                        <td><a href="{% url 'download_excel' file.0 %}">下载</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="#" onclick="delete_excel('{{file.0}}')">删除</a></td>
-                                    {% endif %}               
+                                        <td></td>
+                                    {% endif %}
                                 </tbody>
                             {% endfor %}
                           </table>
@@ -401,12 +405,24 @@
     </div>  
 
     <script>
-        layui.use('element', function(){
+        layui.use(['element', 'layer'], function(){
         var upload = layui.upload;
         var $ = layui.$;
         var load = null;
-        // 渲染
+        var layer = layui.layer;
 
+        // 保留tab记录
+        $(".layui-tab-title li").click(function(){
+            var picTabNum = $(this).index();
+            sessionStorage.setItem("picTabNum",picTabNum);
+        });
+        $(function(){
+            var getPicTabNum = sessionStorage.getItem("picTabNum");
+            $(".layui-tab-title li").eq(getPicTabNum).addClass("layui-this").siblings().removeClass("layui-this");
+            $(".layui-tab-content>div").eq(getPicTabNum).addClass("layui-show").siblings().removeClass("layui-show");
+        })
+
+        // 渲染
         // chat
         $('#chat_submit').click(function () {
             // clear
@@ -554,8 +570,13 @@
             if (res.status=='error') {
               layer.msg(res.message);
             } else {
-              layer.msg('上传成功');
-              window.location.href = "{% url 'console' %}";
+                layer.msg('上传成功');
+                var loadIndex = layer.load(2);
+                // 模拟关闭
+                setTimeout(function(){
+                    layer.close(loadIndex)
+                    window.location.href = "{% url 'console' %}";
+                }, 1000);
             }
           },
           error: function(res){
@@ -659,7 +680,12 @@
               layer.msg('内部异常');
             } else {
               layer.msg('删除成功');
-              window.location.href = "{% url 'console' %}";
+                var loadIndex = layer.load(2);
+                // 模拟关闭
+                setTimeout(function(){
+                    layer.close(loadIndex)
+                    window.location.href = "{% url 'console' %}";
+                }, 1000);
             }
           }
         })

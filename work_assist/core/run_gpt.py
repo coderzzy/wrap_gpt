@@ -1,7 +1,10 @@
+import time
 import os
 import traceback
+import pandas as pd
 import work_assist.core.gpt.model_config as model
 from work_assist.core.gpt.input_process import txt_read, excel_read, word_read, pdf_read
+import work_assist.models as models
 
 
 def chat_stream_response(input_text, model_config):
@@ -51,22 +54,40 @@ def content_stream_result(gpt_type, response):
 
 
 # excel批处理，非流式方案
-def excel_process(input_path, output_path, column_name, output_column_name,
+def excel_process(file_name, file_path,
+                  column_name, output_column_name,
                      timesleep_config, temperature_config, model_config,
                      system_prompt, user_prompt, ex_user_prompt, ex_assistant_prompt):
     print('start')
     # gpt
     gpt_type, api_key = __get_gpt_type(model_config)
     try:
-        model.batchProcess(gpt_type, api_key,
-                        input_path, output_path, column_name, output_column_name,
-                        timesleep_config, temperature_config, model_config,
-                        system_prompt, user_prompt, ex_user_prompt, ex_assistant_prompt)
-        os.remove(input_path)
+        df = pd.read_excel(file_path)
+        # 记录初始数据
+        models.Excel.objects.create(name=file_name, file_path=file_path,
+                                    processed_line=0, total_line=df.shape[0],
+                                    status='processing', status_content='')
+        # 循环遍历每一行并调用GPT-3.5 API处理
+        generated_texts = []
+        for index, row in df.iterrows():
+            input_text = row[column_name]  # 从指定列获取文本
+            generated_text = model.modelConfig_batch(gpt_type, api_key,
+                                                 input_text, temperature_config, model_config,
+                                                 system_prompt, user_prompt, ex_user_prompt, ex_assistant_prompt)
+            generated_texts.append(generated_text)
+            print(generated_text)
+            print("Process "+str(index+1)+": "+generated_text)
+            # 更新数据
+            models.Excel.objects.filter(name=file_name).update(processed_line=index+1)
+            time.sleep(timesleep_config)
+        df[output_column_name] = generated_texts  # 将生成的文本添加到新列
+        df.to_excel(file_path, index=False)
+        # 更新数据
+        models.Excel.objects.filter(name=file_name).update(status='success')
     except Exception as e:
         traceback.print_exc()
-        # 文件改名，以标识异常
-        os.rename(input_path, input_path.replace('unfinished', 'error'))
+        # 记录异常
+        models.Excel.objects.filter(name=file_name).update(status='error', status_content=str(e))
     print('end')
 
 

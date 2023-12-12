@@ -8,6 +8,7 @@ from django.core.files.storage import FileSystemStorage
 from django.views.decorators.csrf import csrf_exempt
 from work_assist.core.constants import CONTENT_ROOT, EXCEL_ROOT, FIGURE_ROOT
 import work_assist.core.run_gpt as gpt
+import work_assist.models as models
 
 
 def is_ajax(request):
@@ -99,12 +100,12 @@ def upload_excel(request):
                 uploaded_file = request.FILES['file']
                 fs = FileSystemStorage()
                 origin_filename = uploaded_file.name
-                filepath = fs.save(os.path.join(EXCEL_ROOT, 'unfinished_'+origin_filename), uploaded_file)
+                file_path = fs.save(os.path.join(EXCEL_ROOT, origin_filename), uploaded_file)
+                file_name = os.path.basename(file_path)
                 # process
-                input_path = filepath
-                output_path = os.path.join(EXCEL_ROOT, f'finished_{origin_filename}')
                 thread = threading.Thread(target=gpt.excel_process,
-                                          args=(input_path, output_path, input_column_name, output_column_name,
+                                          args=(file_name, file_path,
+                                                input_column_name, output_column_name,
                                                 timesleep_config, temperature_config, model_config,
                                                 system_prompt, user_prompt, ex_user_prompt, ex_assistant_prompt,))
                 thread.start()
@@ -133,6 +134,8 @@ def delete_excel(request):
     file_path = os.path.join(EXCEL_ROOT, file_name)
     if os.path.exists(file_path):
         os.remove(file_path)
+        # 更新数据库
+        models.Excel.objects.filter(name=file_name).delete()
         return JsonResponse('success', safe=False)
     return JsonResponse('error', safe=False)
 

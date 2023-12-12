@@ -29,10 +29,11 @@ def get_response(api_key,
     return response
 
 
-def get_result(response, stream=False):
-    if stream:
-        for chunk in response:
-            content = chunk.result if 'result' in chunk else ""
-            yield content
-    else:
-        return response['result']
+def get_result(response):
+    return response['result']
+
+
+def get_stream_result(response):
+    for chunk in response:
+        content = chunk.result if 'result' in chunk else ""
+        yield content

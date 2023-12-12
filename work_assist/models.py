@@ -9,3 +9,12 @@ class User(models.Model):
     name = models.CharField(max_length=255)
 
 
+class Excel(models.Model):
+    name = models.CharField(max_length=255)
+    file_path = models.CharField(max_length=255)
+    processed_line = models.IntegerField()
+    total_line = models.IntegerField()
+    status = models.CharField(max_length=255)
+    status_content = models.CharField(max_length=255)
+
+

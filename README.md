@@ -27,3 +27,10 @@ python manage.py OPENAI_KEY:xxxx,WENXIN_TOKEN:xxxx[,...] runserver 0.0.0.0:8000
 ```python
 python manage.py createsuperuser
 ```
+
+
+## 层次结构
+html/templates/static -> views -> services -> core/models/...
+
+## TODO
+1. 层次结构改造，整合出service层，隔离views和models

@@ -27,17 +27,16 @@ def get_response(api_key,
     return response
 
 
-def get_result(response, stream=False):
-    if stream:
-        for chunk in response:
-            content = chunk.choices[0].delta.content
-            if not content:
-                content = '~'
-            yield content
-    else:
-        if 'error' in response:
-            return response['error']['message']
-        return response['choices'][0]['message']['content']
+def get_result(response):
+    return response.choices[0].message.content
+
+
+def get_stream_result(response):
+    for chunk in response:
+        content = chunk.choices[0].delta.content
+        if not content:
+            content = '~'
+        yield content
 
 
 def get_figure_response(api_key, base64_image,

@@ -2,6 +2,7 @@
 from django.shortcuts import render
 import os
 from work_assist.core.constants import EXCEL_ROOT
+import work_assist.models as models
 
 
 def head(request):
@@ -13,8 +14,7 @@ def index(request):
 
 
 def console(request):
-    uploaded_excels = [(file_name, file_name.split('_')[1], file_name.split('_')[0])
-                       for file_name in os.listdir(os.path.join(EXCEL_ROOT))]
+    uploaded_excels = models.Excel.objects.all()
     context = {'uploaded_excels': uploaded_excels}
     return render(request, 'console.html', context)
 
