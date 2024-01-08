@@ -1,6 +1,11 @@
 from django.contrib import admin
-from work_assist.models import User, Excel
+import work_assist.models as models
+
 
 # Register your models here.
-admin.site.register(User)
-admin.site.register(Excel)
+class ExcelManager(admin.ModelAdmin):
+    list_display = ['id', 'name', 'file_path']
+
+
+admin.site.register(models.User)
+admin.site.register(models.Excel, ExcelManager)
