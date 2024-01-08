@@ -125,5 +125,19 @@
         </div>
     </div>
 </div>
+
+<script>
+    layui.use(['layer'], function() {
+        var $ = layui.$
+            , layer = layui.layer;
+
+        {% if messages %}
+            {% for message in messages %}
+                layer.msg("{{ message }}")
+            {% endfor %}
+        {% endif %}
+    });
+
+</script>
 </body>
 </html>
