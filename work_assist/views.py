@@ -1,7 +1,5 @@
 # 路由能力
 from django.shortcuts import render
-import os
-from work_assist.core.constants import EXCEL_ROOT
 import work_assist.models as models
 
 
