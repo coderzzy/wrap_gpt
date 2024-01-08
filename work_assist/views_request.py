@@ -24,7 +24,6 @@ def do_login(request):
         if len(users) == 0:
             return JsonResponse({'status': 'error', 'message': '用户名或密码错误!'}, safe=False)
         # 基于jwt, 加密返回token
-        # TODO: 在其他接口中验证token，暂时先不实现
         secret_key = ''
         payload = {"username": users[0]['name']}
         token = jwt.encode(payload, secret_key, algorithm='HS256')
