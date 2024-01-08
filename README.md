@@ -12,6 +12,7 @@ pip install erniebot
 pip install tiktoken
 pip install python-docx
 pip install PyPDF2
+pip install pyjwt
 
 django-admin --version
 

@@ -18,31 +18,50 @@
     </ul>
     <ul class="layui-nav layui-col-md3" style="background-color: rgba(17,17,17,0.75);">
         <li class="layui-nav-item"><a href="{% url 'case' %}">教程 & 案例</a></li>
-        <li class="layui-nav-item" style="background-color: rgba(17,17,17,0.75);">
-            <a><img src="static/image/avatar.jpg" class="layui-nav-img" style="background-color: rgba(17,17,17,0.75);">TEST</a>
-            <dl class="layui-nav-child">
-                <dd style="color: white; text-align: center; background: orange">硬币：0</dd>
-                <dd><a href="#">个人中心</a></dd>
-                <dd><a href="#">未完待续</a></dd>
-                <dd><a href="#">退出登录</a></dd>
-            </dl>
-        </li>
+        <li id='user-info' class="layui-nav-item" style="background-color: rgba(17,17,17,0.75);"></li>
     </ul>
     <div class="layui-nav layui-col-md2" 
     style="background-color: rgba(17,17,17,1); display: flex;align-items: center; margin-top: 5px; padding: 10px;">
-        <button class="layui-btn layui-btn-sm" lay-event="register">注册</button>
-        <button class="layui-btn layui-btn-sm layui-btn-danger" lay-event="login">登录</button>
+        <!-- <button class="layui-btn layui-btn-sm" lay-event="register">注册</button> -->
+        <div id="login-button"></div>
     </div>
 </div>
 
 </body>
 <script type="text/javascript">
+    function logout(){
+        // 移除cookie中的token即可
+        var exp = new Date();
+        const result = document.cookie.match(/user-token=([\w\.]+)/);
+        if (result){
+            document.cookie= result[0]+";expires="+exp.toGMTString();
+            window.location.reload();
+        }
+    }
+
     //注意：导航 依赖 element 模块，否则无法进行功能性操作
     layui.use(['util', 'layer','form'], function(){
         var $ = layui.$
             ,form = layui.form
             ,layer = layui.layer
             ,util = layui.util;
+
+        $(function () {
+            // check cookie
+            const result = document.cookie.match(/user-token=([\w\.]+)/);
+            if (result){
+                const token = result[1]
+                const jwtParts = token.split(".")
+                const payload = JSON.parse(atob(jwtParts[1]))
+                $('#user-info').append(`<a><img src="static/image/avatar.jpg" class="layui-nav-img" style="background-color: rgba(17,17,17,0.75);">${payload.username}</a>\n` +
+                    '            <dl class="layui-nav-child">\n' +
+                    '                <dd><a href="#">个人中心</a></dd>\n' +
+                    '                <dd><a href="javascript:logout();">退出登录</a></dd>\n' +
+                    '            </dl>')
+            } else {
+                $('#login-button').append('<button class="layui-btn layui-btn-sm layui-btn-danger" lay-event="login">登录</button>')
+            }
+        })
 
         util.event('lay-event',{
             // 注册和登录
@@ -98,15 +117,30 @@
                     success: function(){
                         // 对弹层中的表单进行初始化渲染
                         form.render();
-                        // 表单提交事件
                         form.on('submit(form-login)', function(data){
-                            var field = data.field; // 获取表单字段值
-                            // 显示填写结果，仅作演示用
-                            layer.alert(JSON.stringify(field), {
-                                title: '当前填写的字段值'
-                            });
-                            // 此处可执行 Ajax 等操作
-                            // …
+                            var field = data.field;
+                            $.ajax({
+                                type: 'POST',
+                                url: 'do_login',
+                                data: {
+                                    csrfmiddlewaretoken: "{{ csrf_token}}",
+                                    username: field.username,
+                                    password: field.password
+                                },
+                                success: function(res){
+                                    if (res.status=='error') {
+                                        layer.msg(res.message);
+                                    } else {
+                                        // 成功，则获取token，并写入cookie
+                                        const token = res.token
+                                        const expirationDate = new Date();
+                                        expirationDate.setTime(expirationDate.getTime() + (60 * 60 * 1000));
+                                        document.cookie = `user-token=${token}; expires=${expirationDate.toUTCString()}; path=/`;
+                                        layer.msg('登录成功');
+                                        window.location.reload();
+                                    }
+                                }
+                            })
                             return false; // 阻止默认 form 跳转
                         });
                     }

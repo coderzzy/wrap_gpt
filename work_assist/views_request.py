@@ -1,5 +1,6 @@
 # 请求处理能力
 import os
+import jwt
 import json
 import traceback
 import threading
@@ -8,11 +9,29 @@ from django.core.files.storage import FileSystemStorage
 from django.views.decorators.csrf import csrf_exempt
 from work_assist.core.constants import CONTENT_ROOT, EXCEL_ROOT, FIGURE_ROOT
 import work_assist.core.run_gpt as gpt
-import work_assist.models as models
+import work_assist.services as services
 
 
 def is_ajax(request):
     return request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest'
+
+
+def do_login(request):
+    username = request.POST.get('username')
+    password = request.POST.get('password')
+    try:
+        users = services.list_users_with_name_and_pwd(username, password)
+        if len(users) == 0:
+            return JsonResponse({'status': 'error', 'message': '用户名或密码错误!'}, safe=False)
+        # 基于jwt, 加密返回token
+        # TODO: 在其他接口中验证token，暂时先不实现
+        secret_key = ''
+        payload = {"username": users[0]['name']}
+        token = jwt.encode(payload, secret_key, algorithm='HS256')
+        return JsonResponse({'status': 'success', 'token': token}, safe=False)
+    except Exception as e:
+        traceback.print_exc()
+        return JsonResponse({'status': 'error', 'message': str(e)}, safe=False)
 
 
 @csrf_exempt
@@ -135,7 +154,7 @@ def delete_excel(request):
     if os.path.exists(file_path):
         os.remove(file_path)
         # 更新数据库
-        models.Excel.objects.filter(name=file_name).delete()
+        services.delete_excel_by_file_name(file_name)
         return JsonResponse('success', safe=False)
     return JsonResponse('error', safe=False)
 

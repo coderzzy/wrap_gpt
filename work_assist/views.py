@@ -1,6 +1,6 @@
 # 路由能力
 from django.shortcuts import render
-import work_assist.models as models
+import work_assist.services as services
 
 
 def head(request):
@@ -12,7 +12,7 @@ def index(request):
 
 
 def console(request):
-    uploaded_excels = models.Excel.objects.all()
+    uploaded_excels = services.list_all_excels()
     context = {'uploaded_excels': uploaded_excels}
     return render(request, 'console.html', context)
 

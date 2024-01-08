@@ -1,7 +1,8 @@
 from django.contrib import admin
 from django.urls import path, include
 from work_assist.views import index, console, case, lab
-from work_assist.views_request import stream_chat, upload_content, stream_content, \
+from work_assist.views_request import do_login, \
+    stream_chat, upload_content, stream_content, \
     upload_excel, download_excel, delete_excel, \
     upload_figure, stream_figure
 
@@ -15,6 +16,7 @@ urlpatterns = [
     path('case', case, name='case'),
     path('lab', lab, name='lab'),
     # functions
+    path('do_login', do_login, name='do_login'),
     path('stream_chat', stream_chat, name='stream_chat'),
     path('upload_content', upload_content, name='upload_content'),
     path('stream_content', stream_content, name='stream_content'),
