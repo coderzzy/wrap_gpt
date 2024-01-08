@@ -4,7 +4,7 @@ import traceback
 import pandas as pd
 import work_assist.core.gpt.model_config as model
 from work_assist.core.gpt.input_process import txt_read, excel_read, word_read, pdf_read
-import work_assist.models as models
+import work_assist.services as services
 
 
 def chat_stream_response(input_text, model_config):
@@ -64,9 +64,9 @@ def excel_process(file_name, file_path,
     try:
         df = pd.read_excel(file_path)
         # 记录初始数据
-        models.Excel.objects.create(name=file_name, file_path=file_path,
-                                    processed_line=0, total_line=df.shape[0],
-                                    status='processing', status_content='')
+        services.create_excel(file_name=file_name, file_path=file_path,
+                              processed_line=0, total_line=df.shape[0],
+                              status='processing', status_content='')
         # 循环遍历每一行并调用GPT-3.5 API处理
         generated_texts = []
         for index, row in df.iterrows():
@@ -78,16 +78,16 @@ def excel_process(file_name, file_path,
             print(generated_text)
             print("Process "+str(index+1)+": "+generated_text)
             # 更新数据
-            models.Excel.objects.filter(name=file_name).update(processed_line=index+1)
+            services.update_excel_processed_line_by_file_name(file_name, processed_line=index+1)
             time.sleep(timesleep_config)
         df[output_column_name] = generated_texts  # 将生成的文本添加到新列
         df.to_excel(file_path, index=False)
         # 更新数据
-        models.Excel.objects.filter(name=file_name).update(status='success')
+        services.update_excel_status_and_content_by_file_name(file_name, status='success', status_content='')
     except Exception as e:
         traceback.print_exc()
         # 记录异常
-        models.Excel.objects.filter(name=file_name).update(status='error', status_content=str(e))
+        services.update_excel_status_and_content_by_file_name(file_name, status='error', status_content=str(e))
     print('end')
 
 
